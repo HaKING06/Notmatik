@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTMATİK | Final Hesaplama Yazılımı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    
+    <style>
+        /* ======================================= */
+        /* 1. RENK PALETLERİ ve TEMEL DEĞİŞKENLER */
+        /* ======================================= */
+        :root {
+            /* Light Mod Renkleri */
+            --primary-dark: #1f3050; 
+            --primary-light: #2c4570;
+            --accent-color: #00bcd4; /* Turkuaz */
+            --success-color: #4caf50;
+            --fail-color: #d9534f;
+            --bg-color: #f0f2f5; 
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --light-text: #6c757d;
+            --input-bg: white;
+            --weight-bg: #e6f7ff;
+            --table-header-bg: #e0f2f1;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.4s;
+        }
+
+        /* KARANLIK MODU RENK PALETİ */
+        body.dark-mode {
+            --primary-dark: #f0f0f0; 
+            --primary-light: #5f7a9d; 
+            --accent-color: #4dd0e1; 
+            --success-color: #66bb6a;
+            --fail-color: #ef5350;
+            --bg-color: #1a1a1a; 
+            --card-bg: #2c2c2c; 
+            --text-color: #fafafa; 
+            --light-text: #bdbdbd; 
+            --input-bg: #3c3c3c;
+            --weight-bg: #373737; 
+            --table-header-bg: #444444;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ======================================= */
+        /* 3. REKLAM YAPISI (DÜZELTME VE YERLEŞİM) */
+        /* ======================================= */
+        
+        /* Ana Taşıyıcı: Hesaplama Kont. ve Reklamları Ortalar */
+        .main-content-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1550px; 
+            padding: 0px;
+            margin-top: 30px; 
+        }
+        
+        /* Reklam Sütunları (Sağ ve Sol) */
+        .ad-column {
+            width: 300px; /* Reklam Genişliği */
+            margin: 0 10px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0; 
+        }
+
+        .ad-box {
+            width: 100%;
+            height: 535px; 
+            background-color: var(--card-bg);
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 535px;
+            color: var(--light-text);
+            transition: all 0.3s;
+        }
+        .ad-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+
+/* ======================================= */
+        /* POPUP (REKLAM) */
+ /* ======================================= */
+/* Pop-up'ı Gizleyen ve Tüm Ekranı Kapsayan Arka Plan */
+.modal-overlay {
+    display: none; 
+    position: fixed;
+    z-index: 9999; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu çıksın */
+    background-color: rgba(0, 0, 0, 0.9); 
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); /* Safari desteği */
+}
+
+/* Pop-up İçerik Kutusu */
+.modal-content {
+    background-color: #fefefe;
+    margin: 30px auto; /* Üstten ve alttan boşluk bırakır, dikeyde ortalar */
+    border-radius: 12px;
+    padding: 0;
+    position: relative;
+    width: 90%; 
+    max-width: 450px; /* Maksimum genişlik (640px ile orantılı) */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+    text-align: center; /* İçindeki img/video'yu ortalamak için */
+}
+
+/* Kapatma Butonu */
+.modal-close-btn {
+    color: #fff; 
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+}
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
+/* Fotoğraf Kapsayıcısı: 640x1140 en boy oranını korur */
+.modal-image-container {
+    position: relative;
+    height: 0;
+    /* 1140 / 640 = 178.125% -> Genişliğe göre yüksekliği ayarlar */
+    padding-top: 178.125%; 
+    overflow: hidden;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* Fotoğraf Stili: Kapsayıcıyı tam doldurur */
+.modal-image-full {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* En boy oranını koruyarak doldurur */
+    display: block; /* img varsayılan inline olduğu için */
+}
+
+/* Video Kapsayıcısı: Fotoğrafın Altında Uyumlu Boyut */
+.modal-video-container {
+    position: relative;
+    height: 0;
+    /* Video için daha kısa bir yükseklik, örn: 640x360 gibi yatay bir videonun oranı (360/640=56.25%) */
+    /* Veya fotoğrafın yarısı kadar dikey (1140/2 = 570) oranına göre (570/640=89.0625%) */
+    /* Ben videonun biraz daha kısa olmasını istediğiniz varsayarak %80 verdim, ayarlayabilirsiniz. */
+padding-top: 29.41%; 
+    
+    overflow: hidden;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-top: -4px;
+}
+
+/* Video Stili: Kapsayıcıyı tam doldurur */
+.modal-video-responsive {
+position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 🔑 DEĞİŞİKLİK: Video tam görünmeli ve kırpılmamalı, bu yüzden 'cover' yerine 'contain' kullanıyoruz. */
+    /* Ancak, 'contain' kullanmak videonun çevresinde boşluk bırakabilir. 
+       Eğer video tam kutuya sığarsa (ki padding-top ile ayarladık), 'cover' veya 'contain' kullanmak yerine tamamen kaldırabiliriz.
+       Ancak en güvenlisi tam boyutu almaktır: */
+    object-fit: fill; /* Kapsayıcıyı tam doldurur, en-boy oranını bozabilir ama boşluk bırakmaz */
+    /* Veya: object-fit: contain; kullanarak video boşluk bırakarak tam gözükmesini sağlayabilirsiniz. Hangisi daha az "çirkin" duruyorsa... */
+}
+
+/* Linklerin blok seviyesinde olmasını sağlar */
+.modal-image-link,
+.modal-video-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ======================================= */
+        /* Mobil Reklam Alanı (Footer Üstü) */
+ /* ======================================= */
+        
+/* 1. Masaüstünde Gizle ve Mobil Ayarlar */
+.mobile-ad-bar {
+    display: none; /* Masaüstünde gizli */
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+    background-color: var(--card-bg);
+   
+}
+
+/* SADECE MOBİLDE GÖSTER KURALI */
+@media screen and (max-width: 768px) {
+    .mobile-ad-bar {
+        display: block; /* Mobil cihazlarda görünür yap */
+    }
+}
+
+/* 2. Reklam Kutusu: Ufak Bir Yer Kaplasın */
+.mobile-ad-box-mobile {
+    width: 90%; 
+    max-width: 450px; 
+    
+    /* 🔑 KİLİT KURAL: Yüksekliği, Ekran Yüksekliğinin %15'i yap. */
+    /* Bu değeri (15vh) küçülterek (örneğin 10vh yaparak) daha ufak bir yer kaplatabilirsiniz. */
+    height: 15vh; 
+    
+    background-color: var(--weight-bg); 
+    margin: 0 auto; 
+    border-radius: 6px;
+    
+    /* İçindeki videoyu konumlandırmak için referans noktası */
+    position: relative; 
+    overflow: hidden; 
+}
+
+
+/* 3. Video Stili: Kutuyu Tam Doldur ve En Boy Oranını Koru */
+.mobile-ad-box-mobile video {
+    /* Kutunun tamamını kapla */
+    width: 100%;
+    height: 100%;
+    
+    /* Video, kutuyu doldururken en-boy oranını korur. */
+    /* Kutu ile video arasında en boy oranı farkı varsa videonun kenarları kesilir. */
+    object-fit: cover;
+    
+    /* Kapsayıcıya tam oturmasını sağla */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+        /* ======================================= */
+        /* 2. TEMEL YAPISAL STİLLER */
+        /* ======================================= */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background: linear-gradient(135deg, #1f3050, #2c4570); 
+            color: white;
+            padding: 40px 0 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        header h1 { font-weight: 800; font-size: 2.5em; margin-bottom: 5px; }
+        header p { margin-top: 5px; margin-bottom: 20px; font-weight: 400; } 
+        
+        .mode-switch { position: absolute; top: 20px; right: 20px; z-index: 100; }
+
+        .mode-switch button {
+            background: var(--card-bg); color: var(--text-color); border: 1px solid var(--light-text);
+            border-radius: 50%; width: 40px; height: 40px; cursor: pointer; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        /* Ana Sekmeler */
+        .main-nav-tabs { 
+            display: flex; justify-content: center; margin-top: 30px; padding: 0 20px; background-color: rgba(255, 255, 255, 0.1); 
+        }
+        .main-nav-tab { 
+            display: flex; align-items: center; padding: 18px 25px; font-weight: 600; color: #b0c2e3;
+            border-bottom: 4px solid transparent; margin: 0 5px; font-size: 1.1em; flex-shrink: 0; cursor: pointer; transition: all 0.3s;
+        }
+        .main-nav-tab.active { color: var(--accent-color); background-color: var(--card-bg); box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1); }
+        body.dark-mode .main-nav-tab.active { background-color: var(--card-bg); }
+        .main-nav-tab i { margin-right: 8px; }
+
+
+        /* Alt Menü */
+        .sub-nav-tabs { 
+            display: flex; justify-content: center; margin-bottom: 25px; margin-top: 0px; 
+            border-bottom: 2px solid var(--weight-bg); padding-bottom: 5px;
+        }
+        .sub-nav-tab { 
+            padding: 8px 15px; font-weight: 600; color: var(--light-text); border-bottom: 3px solid transparent;
+            margin: 0 5px; flex-shrink: 0; cursor: pointer; transition: all 0.3s;
+        }
+        .sub-nav-tab.active { color: var(--primary-dark); border-bottom: 3px solid var(--primary-dark); }
+        body.dark-mode .sub-nav-tab.active { color: var(--text-color); border-bottom: 3px solid var(--text-color); }
+
+
+        /* Ana İçerik Konteyneri */
+        .container {
+            background-color: var(--card-bg); box-shadow: var(--box-shadow); transition: background-color var(--transition-speed);
+            width: 95%; max-width: 950px; padding: 50px; border-radius: var(--border-radius); margin-top: -10px;
+            z-index: 10; margin-bottom: 50px;
+        }
+
+        .calculator-content, .sub-calculator-content { display: none; }
+        .calculator-content.active, .sub-calculator-content.active { display: block; animation: slideIn 0.6s; }
+
+        h2 { 
+            font-weight: 700; color: var(--primary-dark); transition: color var(--transition-speed);
+            margin-bottom: 15px; font-size: 1.8em;
+        }
+        body.dark-mode h2 { color: var(--text-color); } 
+        body.dark-mode .result-box p { color: var(--text-color); }
+
+        /* ======================================= */
+        /* 3. FORM VE BUTONLAR */
+        /* ======================================= */
+        
+        .input-group { margin-bottom: 20px; }
+        .input-group label {
+            display: block; margin-bottom: 8px; font-weight: 600; color: var(--light-text);
+            font-size: 0.9em; text-transform: uppercase;
+        }
+
+        /* Input/Select Boyutları ve Odak Animasyonu */
+        input[type="number"], select {
+            padding: 12px 15px; height: 48px; box-sizing: border-box; background-color: var(--input-bg);
+            color: var(--text-color); border: 1px solid var(--light-text); width: 100%; border-radius: 6px;
+            transition: all var(--transition-speed); font-size: 1em; font-weight: 500;
+        }
+        input[type="number"]:focus, select:focus {
+            border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 3px rgba(0, 187, 212, 0.2);
+            transform: scale(1.01);
+        }
+
+        .weight-setting {
+            background-color: var(--weight-bg); transition: background-color var(--transition-speed);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px; padding: 15px; border-radius: 8px; margin-bottom: 30px;
+        }
+
+        /* Buton */
+        .calculate-btn {
+            background: #1f3050; color: white; box-shadow: 0 4px 10px rgba(31, 48, 80, 0.5); 
+            padding: 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 1.1em;
+            font-weight: 700; text-transform: uppercase; width: 100%; margin-top: 15px; transition: all 0.3s;
+        }
+        .calculate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(31, 48, 80, 0.5); }
+        body.dark-mode .calculate-btn { background: #4c70a8; color: white; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); }
+        body.dark-mode .calculate-btn:hover { background: #5f7a9d; }
+
+
+        /* ======================================= */
+        /* 4. SONUÇ PANELLERİ VE TABLO ESTETİĞİ */
+        /* ======================================= */
+        
+        .result-box {
+            display: none; opacity: 0; background-color: var(--weight-bg); 
+            border: 2px solid var(--success-color);
+            padding: 25px; border-radius: var(--border-radius); margin-top: 30px;
+            position: relative; transition: all var(--transition-speed);
+        }
+        
+        /* Dinamik Çerçeve Sınıfları */
+        .result-box.box-fail { border-color: var(--fail-color); box-shadow: 0 0 10px rgba(217, 83, 79, 0.5); }
+        .result-box.box-pass { border-color: var(--success-color); box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
+
+        .result-box.show { display: block; opacity: 1; transform: translateY(0); }
+
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        
+        /* Tablo Sütun Estetiği (Daha Uyumlu) */
+        .result-table th, .result-table td { padding: 10px 5px; font-size: 0.95em; border: none; }
+        .result-table th:first-child, .result-table td:first-child { text-align: left; padding-left: 15px; font-weight: 600; }
+        .result-table th:last-child, .result-table td:last-child { text-align: right; padding-right: 15px; font-weight: 500; }
+        .result-table th { background-color: var(--table-header-bg); color: var(--text-color); font-weight: 700; }
+
+        /* İKON KONUMU (Sağ Üst Köşe) */
+        .result-icon { font-size: 1.5em; margin-left: 10px; vertical-align: middle; float: right; opacity: 1; transition: all 0.3s; }
+        
+        /* GEREKLİ FİNAL NOTU PANELİ ESTETİĞİ */
+        .final-result-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 15px; margin-bottom: 30px; text-align: center;
+        }
+        .info-card {
+            background-color: var(--card-bg); border-radius: var(--border-radius); padding: 15px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); transition: background-color var(--transition-speed);
+        }
+        .info-card label { font-size: 0.8em; color: var(--light-text); font-weight: 600; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .info-card span { font-size: 1.4em; font-weight: 800; display: block; color: var(--primary-dark); }
+        body.dark-mode .info-card span { color: var(--text-color); }
+
+        .final-ihtiyaci-label { font-size: 1.4em; color: var(--primary-dark); font-weight: 700; display: block; margin-top: 10px; }
+        body.dark-mode .final-ihtiyaci-label { color: var(--text-color); }
+        
+        .final-ihtiyaci-score { font-size: 3.5em; font-weight: 900; display: block; margin: 10px 0; transition: color var(--transition-speed); }
+
+
+        /* Footer */
+        footer {
+            background-color: #1f3050; color: #b0c2e3; padding: 25px 0; width: 100%;
+            text-align: center; font-size: 0.85em; flex-shrink: 0; margin-top: auto;
+        }
+
+
+        /* ======================================= */
+        /* 5. RESPONSIVE DÜZELTMELER */
+        /* ======================================= */
+        @media (max-width: 768px) {
+            .container { padding: 30px 15px; }
+            .weight-setting { grid-template-columns: 1fr; }
+            .final-result-grid { grid-template-columns: 1fr; } 
+            .main-nav-tab { padding: 15px 10px; font-size: 0.9em; }
+            .sub-nav-tab { padding: 8px 10px; font-size: 0.85em; }
+        }
+                @media (min-width: 1200px) {
+             .ad-column { display: flex; margin-top: 0; }
+        }
+
+        /* Mobil Ekran (Yan Reklamları Gizle, Alt Reklamı Göster) */
+        @media (max-width: 1199px) {
+            .ad-column { display: none; }
+            .main-content-wrapper { padding: 0 0px; margin-top: 0; }
+            .mobile-ad-bar { display: block; }
+            footer { margin-top: 0px; padding-top: 0px; } /* Mobil reklam barı footer'a yapışsın */
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 30px 15px; }
+            .weight-setting { grid-template-columns: 1fr; }
+            .final-result-grid { grid-template-columns: 1fr; } 
+        }
+    </style>
+</head>
+<body class="">
+
+
+
+<div id="first-time-modal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="modal-close-btn">&times;</span>
+        
+        <a href="https://kd.link/?code=HAK06" target="_blank" class="modal-image-link">
+            <div class="modal-image-container">
+                <img src="add/SOL.png" alt="Popup Görseli" class="modal-image-full">
+            </div>
+        </a>
+
+        <a href="https://kd.link/?code=HAK06" target="_blank" class="modal-video-link">
+            <div class="modal-video-container">
+                <video id="modal-video" autoplay muted loop playsinline class="modal-video-responsive">
+                    <source src="add/MBL.mp4" type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
+                </video>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+
+    <div class="mode-switch">
+        <button onclick="toggleDarkMode()">
+            <i id="mode-icon" class="fa-solid fa-moon"></i>
+        </button>
+    </div>
+
+    <header>
+        <h1>NOTMATİK <i class="fa-solid fa-graduation-cap" style="color: var(--accent-color);"></i></h1>
+        <p style="font-size: 1.1em; color: #b0c2e3; font-weight: 400;">Akademik Başarı Hesaplama Platformu</p>
+        
+        <div class="main-nav-tabs">
+            <div class="main-nav-tab active" id="tab-normal" onclick="showMainCalculator('normal')"><i class="fa-solid fa-book-open"></i> Vize-Final Hesap</div>
+            <div class="main-nav-tab" id="tab-proje" onclick="showMainCalculator('proje')"><i class="fa-solid fa-code-branch"></i> Proje Dahil Hesap</div>
+        </div>
+    </header>
+
+        <div class="main-content-wrapper">
+
+        <div class="ad-column left-ad">
+             <a href="https://kd.link/?code=HAK06" target="_blank" class="ad-box">
+                <img src="add/SOL.png" alt="Sol Dikey Reklam 1">
+            </a>
+        </div>
+
+    <div class="container">
+        
+        <div class="calculator-content active" id="normal-content">
+            
+            <div class="sub-nav-tabs">
+                <div class="sub-nav-tab active" id="tab-normal-tp" onclick="showSubCalculator('normal-tp')"><i class="fa-solid fa-balance-scale"></i> Ortalama Hesaplama</div>
+                <div class="sub-nav-tab" id="tab-normal-fi" onclick="showSubCalculator('normal-fi')"><i class="fa-solid fa-bullseye"></i> Gerekli Final Notu</div>
+            </div>
+
+            <div class="sub-calculator-content active" id="normal-tp-content">
+                <h2>Dönem Sonu Başarı Puanı (Vize-Final)</h2>
+
+                <div class="input-group">
+                    <label for="gecme-notu-tp">Ders Geçme Notu:</label>
+                    <select id="gecme-notu-tp" required onchange="document.getElementById('sonuc-toplam-puan-normal').classList.remove('show'); updateGecmeNotu('tp')">
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50">50</option>
+                        <option value="55">55</option>
+                        <option value="60"selected>60</option>
+                    </select>
+                </div>
+
+                <div class="weight-setting">
+                    <div class="input-group">
+                        <label for="vize-agirlik-tp">Vize Ağırlığı (%)</label>
+                        <input type="number" id="vize-agirlik-tp" value="30" min="0" max="100" oninput="updateFinalWeight('tp')" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="final-agirlik-tp">Final Ağırlığı (%)</label>
+                        <input type="number" id="final-agirlik-tp" value="70" min="0" max="100" disabled>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="vize-tp">Vize Notu (0-100)</label>
+                    <input type="number" id="vize-tp" placeholder="Vize notunu giriniz" min="0" max="100" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="final-tp">Final Notu (0-100)</label>
+                    <input type="number" id="final-tp" placeholder="Final notunu giriniz" min="0" max="100" required>
+                </div>
+                
+                <button class="calculate-btn" onclick="hesaplaToplamPuan()">ORTALAMAYI HESAPLA</button>
+
+                <div class="result-box" id="sonuc-toplam-puan-normal">
+                    <i id="icon-normal-tp" class="result-icon"></i>
+                    <p style="font-size: 1.1em; color: var(--primary-dark); font-weight: 600;">Ortalama Detayı:</p>
+                    <table class="result-table">
+                        <tr><th>Not Türü</th><th>Ağırlık</th><th>Tam Sayı Katkısı</th></tr>
+                        <tr><td>Vize</td><td id="vizeYuzde-tp">30%</td><td id="vizePuan-tp"></td></tr>
+                        <tr><td>Final</td><td id="finalYuzde-tp">70%</td><td id="finalPuan-tp"></td></tr>
+                        <tr id="toplam-satir-normal">
+                            <td colspan="2">GENEL ORTALAMA</td>
+                            <td id="toplamPuan-tp"></td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 15px; font-weight: 700; color: var(--primary-dark);">
+                        Geçme Notu (<span id="gosterilenGecmeNotu-tp">50</span>) İçin Durum: 
+                        <span id="gecmeDurumu-tp" style="font-size: 1.1em;"></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="sub-calculator-content" id="normal-fi-content">
+                <h2>Hedef Başarı İçin Gerekli Final Notu (Vize-Final)</h2>
+
+                <div class="input-group">
+                    <label for="hedefPuan-fi">Hedef Toplam Ortalama:</label>
+                    <select id="hedefPuan-fi" required onchange="document.getElementById('sonuc-final-ihtiyaci-normal').classList.remove('show')">
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50" >50</option>
+                        <option value="55">55</option>
+                        <option value="60" selected>60</option>
+                    </select>
+                </div>
+
+                <div class="weight-setting">
+                    <div class="input-group">
+                        <label for="vize-agirlik-fi">Vize Ağırlığı (%)</label>
+                        <input type="number" id="vize-agirlik-fi" value="30" min="0" max="100" oninput="updateFinalWeight('fi')" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="final-agirlik-fi">Final Ağırlığı (%)</label>
+                        <input type="number" id="final-agirlik-fi" value="70" min="0" max="100" disabled>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="vize-fi">Vize Notu (0-100)</label>
+                    <input type="number" id="vize-fi" placeholder="Vize notunu giriniz" min="0" max="100" required>
+                </div>
+
+                <button class="calculate-btn" onclick="hesaplaFinalIhtiyaci()">GEREKLİ FİNAL NOTUNU HESAPLA</button>
+
+                <div class="result-box" id="sonuc-final-ihtiyaci-normal">
+                    <div class="final-result-grid">
+                        <div class="info-card">
+                            <label>Hedef Ortalama</label>
+                            <span class="accent-color"><span id="gosterilenHedefPuan"></span></span>
+                        </div>
+                        <div class="info-card">
+                            <label>Vize Katkısı</label>
+                            <span class="pass-color"><span id="vizeKatkisi-fi-int"></span></span>
+                        </div>
+                    </div>
+                    <div style="border-top: 1px solid var(--light-text); padding-top: 20px; margin-top: 10px;">
+                        <p class="final-ihtiyaci-label" style="font-size: 1.4em; color: var(--text-color);">ALMANIZ GEREKEN MİNİMUM FİNAL NOTU:</p>
+                        
+                        <span class="final-ihtiyaci-score accent-color" id="finalIhtiyaci-fi"></span>
+                        
+                        <p id="final-uyari" style="display:none; color: var(--fail-color); font-weight: 600; margin-top: 10px;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-content" id="proje-content">
+            
+            <div class="sub-nav-tabs">
+                <div class="sub-nav-tab active" id="tab-proje-tp" onclick="showSubCalculator('proje-tp')"><i class="fa-solid fa-balance-scale"></i> Projeli Ortalama Hesaplama</div>
+                <div class="sub-nav-tab" id="tab-proje-fi" onclick="showSubCalculator('proje-fi')"><i class="fa-solid fa-bullseye"></i> Gerekli Final Notu</div>
+            </div>
+
+            <div class="sub-calculator-content active" id="proje-tp-content">
+                <h2>Dönem Sonu Başarı Puanı (Proje Dahil)</h2>
+
+                <div class="input-group">
+                    <label for="gecme-notu-proje-tp">Ders Geçme Notu:</label>
+                    <select id="gecme-notu-proje-tp" required onchange="document.getElementById('sonuc-proje-tp').classList.remove('show'); updateGecmeNotu('proje-tp')">
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50" >50</option>
+                        <option value="55">55</option>
+                        <option value="60" selected>60</option>
+                    </select>
+                </div>
+
+                <div class="weight-setting weight-setting-proje">
+                    <div class="input-group">
+                        <label for="vize-agirlik-proje-tp">Vize (%)</label>
+                        <input type="number" id="vize-agirlik-proje-tp" value="25" min="0" max="100" oninput="updateProjeWeights('proje-tp')" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="proje-agirlik-proje-tp">Proje (%)</label>
+                        <input type="number" id="proje-agirlik-proje-tp" value="25" min="0" max="100" oninput="updateProjeWeights('proje-tp')" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="final-agirlik-proje-tp">Final (%)</label>
+                        <input type="number" id="final-agirlik-proje-tp" value="50" min="0" max="100" disabled>
+                    </div>
+                </div>
+
+
+                <div class="input-group">
+                    <label for="vize-proje-tp">Vize Notu (0-100)</label>
+                    <input type="number" id="vize-proje-tp" placeholder="Vize notunu giriniz" min="0" max="100" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="proje-proje-tp">Proje Notu (0-100)</label>
+                    <input type="number" id="proje-proje-tp" placeholder="Proje notunu giriniz" min="0" max="100" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="final-proje-tp">Final Notu (0-100)</label>
+                    <input type="number" id="final-proje-tp" placeholder="Final notunu giriniz" min="0" max="100" required>
+                </div>
+
+                <button class="calculate-btn" onclick="hesaplaProjeToplamPuan()">ORTALAMAYI HESAPLA</button>
+
+                <div class="result-box" id="sonuc-proje-tp">
+                    <i id="icon-proje-tp" class="result-icon"></i>
+                    <p style="font-size: 1.1em; color: var(--primary-dark); font-weight: 600;">Ortalama Detayı:</p>
+                    <table class="result-table">
+                        <tr><th>Not Türü</th><th>Ağırlık</th><th>Tam Sayı Katkısı</th></tr>
+                        <tr><td>Vize</td><td id="vizeYuzde-proje-tp">25%</td><td id="vizePuan-proje-tp"></td></tr>
+                        <tr><td>Proje</td><td id="projeYuzde-proje-tp">25%</td><td id="projePuan-proje-tp"></td></tr>
+                        <tr><td>Final</td><td id="finalYuzde-proje-tp">50%</td><td id="finalPuan-proje-tp"></td></tr>
+                        <tr id="toplam-satir-proje-tp">
+                            <td colspan="2">GENEL ORTALAMA</td>
+                            <td id="toplamPuan-proje-tp"></td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 15px; font-weight: 700; color: var(--primary-dark);">
+                        Geçme Notu (<span id="gosterilenGecmeNotu-proje-tp">50</span>) İçin Durum: 
+                        <span id="gecmeDurumu-proje-tp" style="font-size: 1.1em;"></span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="sub-calculator-content" id="proje-fi-content">
+                <h2>Hedef Başarı İçin Gerekli Final Notu (Proje Dahil)</h2>
+
+                <div class="input-group">
+                    <label for="hedefPuan-proje-fi">Hedef Toplam Ortalama:</label>
+                    <select id="hedefPuan-proje-fi" required onchange="document.getElementById('sonuc-proje-fi').classList.remove('show')">
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50" >50</option>
+                        <option value="55">55</option>
+                        <option value="60" selected>60</option>
+                    </select>
+                </div>
+                
+                <div class="weight-setting weight-setting-proje">
+                    <div class="input-group">
+                        <label for="vize-agirlik-proje-fi">Vize (%)</label>
+                        <input type="number" id="vize-agirlik-proje-fi" value="25" min="0" max="100" oninput="updateProjeWeights('proje-fi')" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="proje-agirlik-proje-fi">Proje (%)</label>
+                        <input type="number" id="proje-agirlik-proje-fi" value="25" min="0" max="100" oninput="updateProjeWeights('proje-fi')" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="final-agirlik-proje-fi">Final (%)</label>
+                        <input type="number" id="final-agirlik-proje-fi" value="50" min="0" max="100" disabled>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="vize-proje-fi">Vize Notu (0-100)</label>
+                    <input type="number" id="vize-proje-fi" placeholder="Vize notunu giriniz" min="0" max="100" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="proje-proje-fi">Proje Notu (0-100)</label>
+                    <input type="number" id="proje-proje-fi" placeholder="Proje notunu giriniz" min="0" max="100" required>
+                </div>
+
+                <button class="calculate-btn" onclick="hesaplaProjeFinalIhtiyaci()">GEREKLİ FİNAL NOTUNU HESAPLA</button>
+
+                <div class="result-box" id="sonuc-proje-fi">
+                    <div class="final-result-grid">
+                        <div class="info-card">
+                            <label>Hedef Ortalama</label>
+                            <span class="accent-color"><span id="gosterilenHedefPuan-proje-fi"></span></span>
+                        </div>
+                        <div class="info-card">
+                            <label>Vize/Proje Katkısı</label>
+                            <span class="pass-color"><span id="vpKatkisi-proje-fi-int"></span></span>
+                        </div>
+                    </div>
+                    <div style="border-top: 1px solid var(--light-text); padding-top: 20px; margin-top: 10px;">
+                        <p class="final-ihtiyaci-label" style="font-size: 1.4em; color: var(--text-color);">ALMANIZ GEREKEN MİNİMUM FİNAL NOTU:</p>
+                        
+                        <span class="final-ihtiyaci-score accent-color" id="finalIhtiyaci-proje-fi"></span>
+                        
+                        <p id="final-uyari-proje" style="display:none; color: var(--fail-color); font-weight: 600; margin-top: 10px;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+            <div class="ad-column right-ad">
+            <a href="https://kd.link/?code=HAK06" target="_blank" class="ad-box">
+                <img src="add/SAG.png" alt="Sağ Dikey Reklam 1">
+            </a>
+        </div>
+    </div>
+    <div class="mobile-ad-bar">
+        <a href="https://kd.link/?code=HAK06" target="_blank">
+            <div class="mobile-ad-box-mobile">
+                <video autoplay muted loop playsinline>
+                    <source src="add/MBL.mp4" type="video/mp4">
+                </video>
+            </div>
+        </a>
+    </div>
+    <footer>
+        <p>&copy; 2025 NOTMATİK. Tüm Hakları Saklıdır.</p>
+        <p><b>halitguns06.dev</b> | Versiyon: 1.2</p>
+        <p style="margin-top: 10px;">* Hesaplamalar <b>tam sayı katkısı</b> kuralına göre yapılmaktadır.</p>
+    </footer>
+
+    <script>
+        // Sayfa yüklendiğinde Dark Mode tercihini kontrol et
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('mode-icon').classList.replace('fa-moon', 'fa-sun');
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.getElementById('mode-icon').classList.replace('fa-sun', 'fa-moon');
+            }
+            
+            showMainCalculator('normal'); 
+            
+            document.querySelectorAll('.result-box').forEach(box => box.classList.remove('show'));
+            
+            updateFinalWeight('tp'); 
+            updateFinalWeight('fi');
+            updateProjeWeights('proje-tp');
+            updateProjeWeights('proje-fi');
+
+            updateGecmeNotu('tp');
+            updateGecmeNotu('proje-tp');
+        });
+
+        // DARK MODE Fonksiyonu
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById('mode-icon');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        // Geçme notu gösterimini günceller
+        function updateGecmeNotu(suffix) {
+            const selectId = suffix.includes('proje') ? 'gecme-notu-proje-tp' : 'gecme-notu-tp';
+            const displayId = suffix.includes('proje') ? 'gosterilenGecmeNotu-proje-tp' : 'gosterilenGecmeNotu-tp';
+            
+            document.getElementById(displayId).textContent = document.getElementById(selectId).value;
+        }
+
+        // Ana Menü (Vize-Final / Proje Dahil) Geçişi
+        function showMainCalculator(type) {
+            document.querySelectorAll('.calculator-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.main-nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(type + '-content').classList.add('active');
+            document.getElementById('tab-' + type).classList.add('active');
+            
+            if (type === 'normal') {
+                showSubCalculator('normal-tp');
+            } else {
+                showSubCalculator('proje-tp');
+            }
+        }
+        
+        // Alt Menü (Ortalama Hesapla / Gerekli Final) Geçişi
+        function showSubCalculator(type) {
+            let containerId = type.startsWith('normal') ? '#normal-content' : '#proje-content';
+            
+            // 1. Tüm alt içerikleri gizle
+            document.querySelectorAll(containerId + ' .sub-calculator-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            // 2. Tüm alt sekmeleri inaktif yap
+            document.querySelectorAll(containerId + ' .sub-nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // 3. İstenen alt içeriği ve sekmeyi aktif et
+            document.getElementById(type + '-content').classList.add('active');
+            document.getElementById('tab-' + type).classList.add('active');
+            
+            // 4. Sonuçları gizle
+            document.querySelectorAll('.result-box').forEach(box => box.classList.remove('show'));
+        }
+
+        // Vize-Final Ağırlık Güncelleme (2 Ağırlık)
+        function updateFinalWeight(suffix) {
+            const vizeAgirlikInput = document.getElementById("vize-agirlik-" + suffix);
+            const finalAgirlikInput = document.getElementById("final-agirlik-" + suffix);
+            
+            let vizeAgirlik = parseFloat(vizeAgirlikInput.value) || 0;
+            
+            if (vizeAgirlik < 0) vizeAgirlik = 0;
+            if (vizeAgirlik > 100) vizeAgirlik = 100;
+            vizeAgirlikInput.value = vizeAgirlik;
+            
+            const finalAgirlik = 100 - vizeAgirlik;
+            finalAgirlikInput.value = finalAgirlik;
+        }
+        
+        // Vize-Proje-Final Ağırlık Güncelleme (3 Ağırlık)
+        function updateProjeWeights(suffix) {
+            const vizeAgirlikInput = document.getElementById("vize-agirlik-" + suffix);
+            const projeAgirlikInput = document.getElementById("proje-agirlik-" + suffix);
+            const finalAgirlikInput = document.getElementById("final-agirlik-" + suffix);
+            
+            let vizeAgirlik = parseFloat(vizeAgirlikInput.value) || 0;
+            let projeAgirlik = parseFloat(projeAgirlikInput.value) || 0;
+            
+            if (vizeAgirlik < 0) vizeAgirlik = 0;
+            if (projeAgirlik < 0) projeAgirlik = 0;
+            vizeAgirlikInput.value = vizeAgirlik;
+            projeAgirlikInput.value = projeAgirlik;
+
+            const toplamAgirlik = vizeAgirlik + projeAgirlik;
+
+            if (toplamAgirlik > 100) {
+                alert("Vize ve Proje ağırlıklarının toplamı %100'ü geçemez. Lütfen değerleri kontrol edin.");
+                finalAgirlikInput.value = 0;
+                return;
+            }
+
+            const finalAgirlik = 100 - toplamAgirlik;
+            finalAgirlikInput.value = finalAgirlik;
+        }
+
+        // 1. Ortalama Hesaplama Fonksiyonu (Normal Dersler)
+        function hesaplaToplamPuan() {
+            const vizeNotu = parseFloat(document.getElementById("vize-tp").value);
+            const finalNotu = parseFloat(document.getElementById("final-tp").value);
+            const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-tp").value) / 100;
+            const finalAgirlik = parseFloat(document.getElementById("final-agirlik-tp").value) / 100;
+            const gecmeNotu = parseInt(document.getElementById("gecme-notu-tp").value); 
+            
+            const resultBox = document.getElementById("sonuc-toplam-puan-normal");
+            const tableRow = document.getElementById("toplam-satir-normal");
+            const gecmeDurumuElement = document.getElementById("gecmeDurumu-tp");
+            const resultIcon = document.getElementById('icon-normal-tp');
+
+            resultBox.classList.remove('show', 'box-pass', 'box-fail');
+            resultIcon.className = 'result-icon'; 
+
+            if (isNaN(vizeNotu) || isNaN(finalNotu) || vizeNotu < 0 || vizeNotu > 100 || finalNotu < 0 || finalNotu > 100) {
+                alert("Lütfen geçerli (0-100 arasında) vize ve final notları giriniz.");
+                return;
+            }
+
+            const vizePuanRaw = vizeNotu * vizeAgirlik;
+            const finalPuanRaw = finalNotu * finalAgirlik;
+            const vizePuanInt = Math.floor(vizePuanRaw);
+            const finalPuanInt = Math.floor(finalPuanRaw);
+            const toplamPuan = vizePuanInt + finalPuanInt;
+
+            document.getElementById("vizePuan-tp").textContent = vizePuanInt + " (Ham: " + vizePuanRaw.toFixed(2) + ")";
+            document.getElementById("finalPuan-tp").textContent = finalPuanInt + " (Ham: " + finalPuanRaw.toFixed(2) + ")";
+            document.getElementById("toplamPuan-tp").textContent = toplamPuan.toFixed(0);
+            
+            if (toplamPuan >= gecmeNotu) {
+                gecmeDurumuElement.textContent = "GEÇTİ!";
+                gecmeDurumuElement.style.color = 'var(--success-color)';
+                tableRow.classList.remove('fail');
+                resultBox.classList.add('box-pass'); 
+                resultIcon.classList.add('fa-solid', 'fa-face-smile', 'icon-pass');
+            } else {
+                gecmeDurumuElement.textContent = "KALDI!";
+                gecmeDurumuElement.style.color = 'var(--fail-color)';
+                tableRow.classList.add('fail');
+                resultBox.classList.add('box-fail'); 
+                resultIcon.classList.add('fa-solid', 'fa-face-frown', 'icon-fail');
+            }
+            
+            setTimeout(() => {
+                resultBox.classList.add('show');
+            }, 10);
+        }
+
+        // 2. Final İhtiyacı Hesaplama Fonksiyonu (Normal Dersler)
+        function hesaplaFinalIhtiyaci() {
+            const vizeNotu = parseFloat(document.getElementById("vize-fi").value);
+            const hedefToplamPuan = parseInt(document.getElementById("hedefPuan-fi").value);
+            const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-fi").value) / 100;
+            const finalAgirlik = parseFloat(document.getElementById("final-agirlik-fi").value) / 100;
+
+            const resultBox = document.getElementById("sonuc-final-ihtiyaci-normal");
+            const uyariElementi = document.getElementById("final-uyari");
+            const finalScoreElement = document.getElementById('finalIhtiyaci-fi');
+
+            resultBox.classList.remove('show');
+            uyariElementi.style.display = 'none';
+            finalScoreElement.classList.remove('pass-color', 'accent-color', 'fail-color');
+
+            if (isNaN(vizeNotu) || vizeNotu < 0 || vizeNotu > 100) {
+                alert("Lütfen geçerli bir vize notu giriniz (0-100 arasında).");
+                return;
+            }
+            if (finalAgirlik === 0) {
+                alert("Final ağırlığı sıfır olamaz.");
+                return;
+            }
+
+            const vizeKatkisiRaw = vizeNotu * vizeAgirlik;
+            const vizeKatkisiInt = Math.floor(vizeKatkisiRaw);
+            const finaldenGerekenInt = hedefToplamPuan - vizeKatkisiInt;
+            const rawFinalNotu = finaldenGerekenInt / finalAgirlik;
+            const finalNotuIhtiyaci = Math.ceil(rawFinalNotu);
+
+            document.getElementById("gosterilenHedefPuan").textContent = hedefToplamPuan;
+            document.getElementById("vizeKatkisi-fi-int").textContent = vizeKatkisiInt;
+            
+            if (finalNotuIhtiyaci > 100) {
+                 finalScoreElement.textContent = "MÜMKÜN DEĞİL!";
+                 finalScoreElement.classList.add('fail-color');
+                 uyariElementi.textContent = `* Gerekli final notu (${finalNotuIhtiyaci}) 100'ün üzerindedir. Bu hedefe ulaşmanız imkansız.`;
+                 uyariElementi.style.display = 'block';
+            } else if (finalNotuIhtiyaci <= 0) {
+                finalScoreElement.textContent = "0";
+                finalScoreElement.classList.add('pass-color');
+                uyariElementi.textContent = "TEBRİKLER! Finalden 0 almanız bile bu hedefe ulaşmanız için yeterli!";
+                uyariElementi.style.display = 'block';
+            }
+            else {
+                finalScoreElement.textContent = finalNotuIhtiyaci;
+                finalScoreElement.classList.add('accent-color');
+            }
+            
+            setTimeout(() => {
+                resultBox.classList.add('show');
+            }, 10);
+        }
+        
+        // 3. Projeli Ortalama Hesaplama Fonksiyonu
+        function hesaplaProjeToplamPuan() {
+            const vizeNotu = parseFloat(document.getElementById("vize-proje-tp").value);
+            const projeNotu = parseFloat(document.getElementById("proje-proje-tp").value);
+            const finalNotu = parseFloat(document.getElementById("final-proje-tp").value);
+            const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-proje-tp").value) / 100;
+            const projeAgirlik = parseFloat(document.getElementById("proje-agirlik-proje-tp").value) / 100;
+            const finalAgirlik = parseFloat(document.getElementById("final-agirlik-proje-tp").value) / 100;
+            const gecmeNotu = parseInt(document.getElementById("gecme-notu-proje-tp").value);
+
+            const resultBox = document.getElementById("sonuc-proje-tp");
+            const tableRow = document.getElementById("toplam-satir-proje-tp");
+            const gecmeDurumuElement = document.getElementById("gecmeDurumu-proje-tp");
+            const resultIcon = document.getElementById('icon-proje-tp');
+
+            resultBox.classList.remove('show', 'box-pass', 'box-fail');
+            resultIcon.className = 'result-icon'; 
+
+            if (isNaN(vizeNotu) || isNaN(projeNotu) || isNaN(finalNotu) || vizeNotu < 0 || vizeNotu > 100 || projeNotu < 0 || projeNotu > 100 || finalNotu < 0 || finalNotu > 100) {
+                alert("Lütfen tüm not alanlarına geçerli (0-100 arasında) değerler giriniz.");
+                return;
+            }
+            if (Math.abs(vizeAgirlik + projeAgirlik + finalAgirlik - 1) > 0.01) { 
+                alert("Ağırlıklar toplamı %100 olmalıdır. Lütfen Vize ve Proje ağırlıklarını kontrol edin.");
+                return;
+            }
+
+            const vizePuanRaw = vizeNotu * vizeAgirlik;
+            const projePuanRaw = projeNotu * projeAgirlik;
+            const finalPuanRaw = finalNotu * finalAgirlik;
+
+            const vizePuanInt = Math.floor(vizePuanRaw);
+            const projePuanInt = Math.floor(projePuanRaw);
+            const finalPuanInt = Math.floor(finalPuanRaw);
+            const toplamPuan = vizePuanInt + projePuanInt + finalPuanInt;
+
+            document.getElementById("vizePuan-proje-tp").textContent = vizePuanInt + " (Ham: " + vizePuanRaw.toFixed(2) + ")";
+            document.getElementById("projePuan-proje-tp").textContent = projePuanInt + " (Ham: " + projePuanRaw.toFixed(2) + ")";
+            document.getElementById("finalPuan-proje-tp").textContent = finalPuanInt + " (Ham: " + finalPuanRaw.toFixed(2) + ")";
+            document.getElementById("toplamPuan-proje-tp").textContent = toplamPuan.toFixed(0);
+
+            if (toplamPuan >= gecmeNotu) {
+                gecmeDurumuElement.textContent = "GEÇTİ!";
+                gecmeDurumuElement.style.color = 'var(--success-color)';
+                tableRow.classList.remove('fail');
+                resultBox.classList.add('box-pass'); 
+                resultIcon.classList.add('fa-solid', 'fa-face-smile', 'icon-pass');
+            } else {
+                gecmeDurumuElement.textContent = "KALDI!";
+                gecmeDurumuElement.style.color = 'var(--fail-color)';
+                tableRow.classList.add('fail');
+                resultBox.classList.add('box-fail'); 
+                resultIcon.classList.add('fa-solid', 'fa-face-frown', 'icon-fail');
+            }
+            
+            setTimeout(() => {
+                resultBox.classList.add('show');
+            }, 10);
+        }
+        
+        // 4. Projeli Final İhtiyacı Hesaplama Fonksiyonu
+        function hesaplaProjeFinalIhtiyaci() {
+            const vizeNotu = parseFloat(document.getElementById("vize-proje-fi").value);
+            const projeNotu = parseFloat(document.getElementById("proje-proje-fi").value);
+            const hedefToplamPuan = parseInt(document.getElementById("hedefPuan-proje-fi").value);
+            
+            const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-proje-fi").value) / 100;
+            const projeAgirlik = parseFloat(document.getElementById("proje-agirlik-proje-fi").value) / 100;
+            const finalAgirlik = parseFloat(document.getElementById("final-agirlik-proje-fi").value) / 100;
+
+            const resultBox = document.getElementById("sonuc-proje-fi");
+            const uyariElementi = document.getElementById("final-uyari-proje");
+            const finalScoreElement = document.getElementById('finalIhtiyaci-proje-fi');
+
+            resultBox.classList.remove('show');
+            uyariElementi.style.display = 'none';
+            finalScoreElement.classList.remove('pass-color', 'accent-color', 'fail-color');
+
+            if (isNaN(vizeNotu) || isNaN(projeNotu) || vizeNotu < 0 || vizeNotu > 100 || projeNotu < 0 || projeNotu > 100) {
+                alert("Lütfen geçerli (0-100 arasında) vize ve proje notları giriniz.");
+                return;
+            }
+            
+            if (finalAgirlik === 0) {
+                alert("Final ağırlığı sıfır olamaz.");
+                return;
+            }
+
+            const vizeKatkisiInt = Math.floor(vizeNotu * vizeAgirlik);
+            const projeKatkisiInt = Math.floor(projeNotu * projeAgirlik);
+            const vpToplamKatkiInt = vizeKatkisiInt + projeKatkisiInt;
+            
+            const finaldenGerekenInt = hedefToplamPuan - vpToplamKatkiInt;
+            const rawFinalNotu = finaldenGerekenInt / finalAgirlik;
+            const finalNotuIhtiyaci = Math.ceil(rawFinalNotu);
+
+            document.getElementById("gosterilenHedefPuan-proje-fi").textContent = hedefToplamPuan;
+            document.getElementById("vpKatkisi-proje-fi-int").textContent = vpToplamKatkiInt;
+            
+            if (finalNotuIhtiyaci > 100) {
+                 finalScoreElement.textContent = "MÜMKÜN DEĞİL!";
+                 finalScoreElement.classList.add('fail-color');
+                 uyariElementi.textContent = `* Gerekli final notu (${finalNotuIhtiyaci}) 100'ün üzerindedir. Bu hedefe ulaşmanız imkansız.`;
+                 uyariElementi.style.display = 'block';
+            } else if (finalNotuIhtiyaci <= 0) {
+                finalScoreElement.textContent = "0";
+                finalScoreElement.classList.add('pass-color');
+                uyariElementi.textContent = "TEBRİKLER! Finalden 0 almanız bile bu hedefe ulaşmanız için yeterli!";
+                uyariElementi.style.display = 'block';
+            }
+            else {
+                finalScoreElement.textContent = finalNotuIhtiyaci;
+                finalScoreElement.classList.add('accent-color');
+            }
+            
+            setTimeout(() => {
+                resultBox.classList.add('show');
+            }, 10);
+        }
+
+        /* ======================================= */
+        /* POPUP (REKLAM) */
+        /* ======================================= */
+
+
+
+// 🔑 ANAHTAR: Sayaç başlangıcını kaydettiğimiz isim
+    const POPUP_LAST_CLOSED_TIME_KEY = 'popup_last_closed_time';
+    
+    // ⏱️ 10 dakika bekleme süresi
+    const SHOW_DELAY_MINUTES = 10; 
+    const DELAY_MILLIS = SHOW_DELAY_MINUTES * 60 * 1000; // 10 dakika milisaniye cinsinden
+
+    function checkAndShowModalWithTimer() {
+        const modal = document.getElementById('first-time-modal');
+        const closeBtn = document.querySelector('.modal-close-btn');
+        const videoElement = document.getElementById('modal-video');
+
+        // Son kapatma zamanını al
+        const lastClosedTime = localStorage.getItem(POPUP_LAST_CLOSED_TIME_KEY);
+        const currentTime = new Date().getTime(); 
+
+        // Koşul: 
+        // 1. Daha önce hiç kapatılmadıysa VEYA 
+        // 2. Son kapatılma zamanından bu yana 10 dakikadan fazla geçtiyse
+        if (!lastClosedTime || (currentTime - parseInt(lastClosedTime) > DELAY_MILLIS)) {
+            
+            // Pop-up'ı göster
+            modal.style.display = 'block';
+            
+            // Video varsa otomatik oynatmayı dene
+            if (videoElement) {
+                videoElement.play().catch(error => {});
+            }
+            
+            // NOT: Bu noktada süreyi kaydetmiyoruz. Süre, kullanıcı KAPATMA tuşuna bastığında kaydedilecek.
+            // Bu, F5 atıldığında 10 dakika dolduysa pop-up'ın her seferinde açılmasını sağlar.
+        }
+
+        // 🔑 KAPATMA BUTONU: Kullanıcı butona bastığında süreyi kaydet ve pop-up'ı kapat.
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.currentTime = 0; 
+            }
+            
+            // Sadece pop-up kapatıldığında süreyi kaydet (10 dakikalık bekleme başlasın)
+            localStorage.setItem(POPUP_LAST_CLOSED_TIME_KEY, new Date().getTime().toString());
+        };
+
+        // Pop-up dışına tıklandığında kapatma
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                if (videoElement) {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                }
+                
+                // Dışa tıklandığında da süreyi kaydet
+                localStorage.setItem(POPUP_LAST_CLOSED_TIME_KEY, new Date().getTime().toString());
+            }
+        };
+    }
+
+    window.onload = checkAndShowModalWithTimer;
+
+
+    </script>
+
+</body>
+</html>
