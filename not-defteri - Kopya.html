@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOTMATİK | Hedef Defterim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #1f3050;
+            --nav-text: #ffffff;
+            --accent: #00bcd4;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --text: #212529;
+            --input-border: #cbd5e0;
+            --shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        body.dark-mode {
+            --primary-bg: #111111;
+            --nav-text: #00bcd4;
+            --bg: #121212;
+            --card: #1e1e1e;
+            --text: #e0e0e0;
+            --input-border: #3d3d3d;
+            --shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Navigasyon Bar */
+        nav {
+            background: var(--primary-bg);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-logo { color: var(--nav-text); font-weight: 800; font-size: 1.4em; text-decoration: none; }
+        .nav-logo i { color: var(--accent); }
+
+        .btn-back { 
+            color: var(--nav-text); 
+            border: 1px solid var(--accent); 
+            padding: 8px 18px; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-size: 0.9em; 
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-back:hover { background: var(--accent); color: #1f3050; }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Veri Giriş Alanı */
+        .action-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .action-card h2 { margin-top: 0; text-align: center; font-size: 1.2em; }
+
+        textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid var(--input-border);
+            background: var(--bg);
+            color: var(--text);
+            font-family: monospace;
+            box-sizing: border-box;
+            outline: none;
+            margin: 15px 0;
+            transition: 0.3s;
+        }
+        textarea:focus { border-color: var(--accent); }
+
+        .btn-save {
+            background: var(--accent);
+            color: #1f3050;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-save:hover { opacity: 0.9; transform: scale(0.98); }
+
+        /* Dinamik Kart Düzeni */
+        .course-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Kartları merkeze toplar */
+            gap: 25px;
+        }
+
+        .course-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-top: 4px solid var(--accent);
+            width: 100%;
+            max-width: 350px; /* PC'de tek kartın devasa olmasını önler */
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        .course-card h3 { margin: 0 0 15px 0; color: var(--accent); font-size: 1.2em; padding-right: 25px; }
+
+        .grid-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .info-item label { display: block; font-size: 0.65em; color: #888; font-weight: 700; margin-bottom: 2px; }
+        .info-item span { font-weight: 700; font-size: 1.05em; }
+
+        .target-box {
+            background: var(--bg);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .target-box label { display: block; font-size: 0.7em; font-weight: 600; opacity: 0.6; }
+        .target-box b { font-size: 1.8em; color: var(--accent); display: block; margin-top: 5px; }
+
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #ff5252;
+            cursor: pointer;
+            opacity: 0.5;
+        }
+        .delete-btn:hover { opacity: 1; }
+
+        .empty-state { text-align: center; padding: 60px 0; width: 100%; opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo">NOTMATİK <i class="fa-solid fa-graduation-cap"></i></a>
+    <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Geri Dön</a>
+</nav>
+
+<div class="container">
+    <div class="action-card">
+        <h2><i class="fa-solid fa-paste"></i> Veriyi Yapıştır</h2>
+        <textarea id="dataInput" placeholder="Kopyalanan veriyi buraya ekle..."></textarea>
+        <button class="btn-save" onclick="saveCourse()">HEDEFİ LİSTEYE EKLE</button>
+    </div>
+
+    <div id="courseList" class="course-grid">
+        </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Dark mode durumunu ana sayfadan çek
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+        loadCards();
+    });
+
+    function saveCourse() {
+        const input = document.getElementById('dataInput').value.trim();
+        if (!input || !input.includes('|')) { alert("Lütfen geçerli bir veri yapıştırın!"); return; }
+
+        const name = prompt("Dersin Adı:");
+        if (!name) return;
+
+        const newCourse = { id: Date.now(), name: name, data: input };
+        const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
+        courses.unshift(newCourse);
+        localStorage.setItem('savedGoals', JSON.stringify(courses));
+        
+        document.getElementById('dataInput').value = "";
+        loadCards();
+    }
+
+    function loadCards() {
+        const list = document.getElementById('courseList');
+        const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
+        
+        if (courses.length === 0) {
+            list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-ghost fa-3x"></i><p>Henüz bir kayıt yok.</p></div>`;
+            return;
+        }
+
+        list.innerHTML = courses.map(course => {
+            const parts = {};
+            course.data.split('|').forEach(p => { 
+                const [k, v] = p.split(':'); 
+                parts[k] = v; 
+            });
+
+            return `
+                <div class="course-card">
+                    <i class="fa-solid fa-trash-can delete-btn" onclick="deleteItem(${course.id})"></i>
+                    <h3>${course.name}</h3>
+                    <div class="grid-info">
+                        <div class="info-item">
+                            <label>VİZE (%${parts.VA})</label>
+                            <span>${parts.V || '-'}</span>
+                        </div>
+                        ${parts.P ? `<div class="info-item"><label>PROJE (%${parts.PA})</label><span>${parts.P}</span></div>` : ''}
+                        <div class="info-item">
+                            <label>HEDEF ORT.</label>
+                            <span>${parts.H}</span>
+                        </div>
+                    </div>
+                    <div class="target-box">
+                        <label>FİNAL (%${parts.FA}) ALMAN GEREKEN</label>
+                        <b>${parts.G}</b>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function deleteItem(id) {
+        if (confirm('Dersi silmek istediğine emin misin?')) {
+            let courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
+            courses = courses.filter(c => c.id !== id);
+            localStorage.setItem('savedGoals', JSON.stringify(courses));
+            loadCards();
+        }
+    }
+</script>
+
+</body>
+</html>

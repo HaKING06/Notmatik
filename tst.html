@@ -477,7 +477,7 @@ position: absolute;
         <a href="https://kd.link/?code=HAK06" target="_blank" class="modal-video-link">
             <div class="modal-video-container">
                 <video id="modal-video" autoplay muted loop playsinline class="modal-video-responsive">
-                    <source src="add/MBL.mp4" type="video/mp4">
+                    <source src="https://fadmoxedziq5rcev.public.blob.vercel-storage.com/silent-night-z01gJElXIRxRuk581NHC0zuC6YDUez.mp4" type="video/mp4">
                     Tarayıcınız video etiketini desteklemiyor.
                 </video>
             </div>
@@ -787,7 +787,8 @@ position: absolute;
         <a href="https://kd.link/?code=HAK06" target="_blank">
             <div class="mobile-ad-box-mobile">
                 <video autoplay muted loop playsinline>
-                    <source src="add/MBL.mp4" type="video/mp4">
+                    <source src="https://fadmoxedziq5rcev.public.blob.vercel-storage.com/silent-night-z01gJElXIRxRuk581NHC0zuC6YDUez.mp4" type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
                 </video>
             </div>
         </a>
@@ -888,96 +889,71 @@ position: absolute;
         }
 
         // Vize-Final Ağırlık Güncelleme (2 Ağırlık)
-        function updateFinalWeight(suffix) {
-            const vizeAgirlikInput = document.getElementById("vize-agirlik-" + suffix);
-            const finalAgirlikInput = document.getElementById("final-agirlik-" + suffix);
-            
-            let vizeAgirlik = parseFloat(vizeAgirlikInput.value) || 0;
-            
-            if (vizeAgirlik < 0) vizeAgirlik = 0;
-            if (vizeAgirlik > 100) vizeAgirlik = 100;
-            vizeAgirlikInput.value = vizeAgirlik;
-            
-            const finalAgirlik = 100 - vizeAgirlik;
-            finalAgirlikInput.value = finalAgirlik;
-        }
-        
-        // Vize-Proje-Final Ağırlık Güncelleme (3 Ağırlık)
-        function updateProjeWeights(suffix) {
-            const vizeAgirlikInput = document.getElementById("vize-agirlik-" + suffix);
-            const projeAgirlikInput = document.getElementById("proje-agirlik-" + suffix);
-            const finalAgirlikInput = document.getElementById("final-agirlik-" + suffix);
-            
-            let vizeAgirlik = parseFloat(vizeAgirlikInput.value) || 0;
-            let projeAgirlik = parseFloat(projeAgirlikInput.value) || 0;
-            
-            if (vizeAgirlik < 0) vizeAgirlik = 0;
-            if (projeAgirlik < 0) projeAgirlik = 0;
-            vizeAgirlikInput.value = vizeAgirlik;
-            projeAgirlikInput.value = projeAgirlik;
+function updateFinalWeight(suffix) {
+    const vizeAgirlikInput = document.getElementById("vize-agirlik-" + suffix);
+    const finalAgirlikInput = document.getElementById("final-agirlik-" + suffix);
+    let vizeAgirlik = parseFloat(vizeAgirlikInput.value) || 0;
+    if (vizeAgirlik < 0) vizeAgirlik = 0;
+    if (vizeAgirlik > 100) vizeAgirlik = 100;
+    vizeAgirlikInput.value = vizeAgirlik;
+    finalAgirlikInput.value = 100 - vizeAgirlik;
+}
 
-            const toplamAgirlik = vizeAgirlik + projeAgirlik;
-
-            if (toplamAgirlik > 100) {
-                alert("Vize ve Proje ağırlıklarının toplamı %100'ü geçemez. Lütfen değerleri kontrol edin.");
-                finalAgirlikInput.value = 0;
-                return;
-            }
-
-            const finalAgirlik = 100 - toplamAgirlik;
-            finalAgirlikInput.value = finalAgirlik;
-        }
-
+function updateProjeWeights(suffix) {
+    const vizeAgirlikInput = document.getElementById("vize-agirlik-" + suffix);
+    const projeAgirlikInput = document.getElementById("proje-agirlik-" + suffix);
+    const finalAgirlikInput = document.getElementById("final-agirlik-" + suffix);
+    let vizeAgirlik = parseFloat(vizeAgirlikInput.value) || 0;
+    let projeAgirlik = parseFloat(projeAgirlikInput.value) || 0;
+    vizeAgirlikInput.value = vizeAgirlik;
+    projeAgirlikInput.value = projeAgirlik;
+    const toplam = vizeAgirlik + projeAgirlik;
+    if (toplam > 100) { finalAgirlikInput.value = 0; return; }
+    finalAgirlikInput.value = 100 - toplam;
+}
         // 1. Ortalama Hesaplama Fonksiyonu (Normal Dersler)
-        function hesaplaToplamPuan() {
-            const vizeNotu = parseFloat(document.getElementById("vize-tp").value);
-            const finalNotu = parseFloat(document.getElementById("final-tp").value);
-            const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-tp").value) / 100;
-            const finalAgirlik = parseFloat(document.getElementById("final-agirlik-tp").value) / 100;
-            const gecmeNotu = parseInt(document.getElementById("gecme-notu-tp").value); 
-            
-            const resultBox = document.getElementById("sonuc-toplam-puan-normal");
-            const tableRow = document.getElementById("toplam-satir-normal");
-            const gecmeDurumuElement = document.getElementById("gecmeDurumu-tp");
-            const resultIcon = document.getElementById('icon-normal-tp');
+function hesaplaToplamPuan() {
+    const vizeNotu = parseFloat(document.getElementById("vize-tp").value);
+    const finalNotu = parseFloat(document.getElementById("final-tp").value);
+    const vizeAgirlikDegeri = document.getElementById("vize-agirlik-tp").value; // Yeni eklenen satır
+    const finalAgirlikDegeri = document.getElementById("final-agirlik-tp").value; // Yeni eklenen satır
+    const vizeAgirlik = parseFloat(vizeAgirlikDegeri) / 100;
+    const finalAgirlik = parseFloat(finalAgirlikDegeri) / 100;
+    const gecmeNotu = parseInt(document.getElementById("gecme-notu-tp").value); 
 
-            resultBox.classList.remove('show', 'box-pass', 'box-fail');
-            resultIcon.className = 'result-icon'; 
+    // --- GÖRSEL GÜNCELLEME: Sadece buton basılınca çalışır ---
+    document.getElementById("vizeYuzde-tp").textContent = vizeAgirlikDegeri + "%";
+    document.getElementById("finalYuzde-tp").textContent = finalAgirlikDegeri + "%";
+    // -------------------------------------------------------
 
-            if (isNaN(vizeNotu) || isNaN(finalNotu) || vizeNotu < 0 || vizeNotu > 100 || finalNotu < 0 || finalNotu > 100) {
-                alert("Lütfen geçerli (0-100 arasında) vize ve final notları giriniz.");
-                return;
-            }
+    const resultBox = document.getElementById("sonuc-toplam-puan-normal");
+    const tableRow = document.getElementById("toplam-satir-normal");
+    const gecmeDurumuElement = document.getElementById("gecmeDurumu-tp");
+    const resultIcon = document.getElementById('icon-normal-tp');
 
-            const vizePuanRaw = vizeNotu * vizeAgirlik;
-            const finalPuanRaw = finalNotu * finalAgirlik;
-            const vizePuanInt = Math.floor(vizePuanRaw);
-            const finalPuanInt = Math.floor(finalPuanRaw);
-            const toplamPuan = vizePuanInt + finalPuanInt;
+    resultBox.classList.remove('show', 'box-pass', 'box-fail');
+    if (isNaN(vizeNotu) || isNaN(finalNotu)) { alert("Notları giriniz"); return; }
 
-            document.getElementById("vizePuan-tp").textContent = vizePuanInt + " (Ham: " + vizePuanRaw.toFixed(2) + ")";
-            document.getElementById("finalPuan-tp").textContent = finalPuanInt + " (Ham: " + finalPuanRaw.toFixed(2) + ")";
-            document.getElementById("toplamPuan-tp").textContent = toplamPuan.toFixed(0);
-            
-            if (toplamPuan >= gecmeNotu) {
-                gecmeDurumuElement.textContent = "GEÇTİ!";
-                gecmeDurumuElement.style.color = 'var(--success-color)';
-                tableRow.classList.remove('fail');
-                resultBox.classList.add('box-pass'); 
-                resultIcon.classList.add('fa-solid', 'fa-face-smile', 'icon-pass');
-            } else {
-                gecmeDurumuElement.textContent = "KALDI!";
-                gecmeDurumuElement.style.color = 'var(--fail-color)';
-                tableRow.classList.add('fail');
-                resultBox.classList.add('box-fail'); 
-                resultIcon.classList.add('fa-solid', 'fa-face-frown', 'icon-fail');
-            }
-            
-            setTimeout(() => {
-                resultBox.classList.add('show');
-            }, 10);
-        }
+    const vizePuanInt = Math.floor(vizeNotu * vizeAgirlik);
+    const finalPuanInt = Math.floor(finalNotu * finalAgirlik);
+    const toplamPuan = vizePuanInt + finalPuanInt;
 
+    document.getElementById("vizePuan-tp").textContent = vizePuanInt + " (Ham: " + (vizeNotu * vizeAgirlik).toFixed(2) + ")";
+    document.getElementById("finalPuan-tp").textContent = finalPuanInt + " (Ham: " + (finalNotu * finalAgirlik).toFixed(2) + ")";
+    document.getElementById("toplamPuan-tp").textContent = toplamPuan.toFixed(0);
+    
+    // Geçme/Kalma renk ve ikon mantığı (mevcut kodun devamı...)
+    if (toplamPuan >= gecmeNotu) {
+        gecmeDurumuElement.textContent = "GEÇTİ!";
+        resultBox.classList.add('box-pass');
+        resultIcon.className = 'result-icon fa-solid fa-face-smile';
+    } else {
+        gecmeDurumuElement.textContent = "KALDI!";
+        resultBox.classList.add('box-fail');
+        resultIcon.className = 'result-icon fa-solid fa-face-frown';
+    }
+    setTimeout(() => { resultBox.classList.add('show'); }, 10);
+}
         // 2. Final İhtiyacı Hesaplama Fonksiyonu (Normal Dersler)
         function hesaplaFinalIhtiyaci() {
             const vizeNotu = parseFloat(document.getElementById("vize-fi").value);
@@ -1033,65 +1009,79 @@ position: absolute;
         }
         
         // 3. Projeli Ortalama Hesaplama Fonksiyonu
-        function hesaplaProjeToplamPuan() {
-            const vizeNotu = parseFloat(document.getElementById("vize-proje-tp").value);
-            const projeNotu = parseFloat(document.getElementById("proje-proje-tp").value);
-            const finalNotu = parseFloat(document.getElementById("final-proje-tp").value);
-            const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-proje-tp").value) / 100;
-            const projeAgirlik = parseFloat(document.getElementById("proje-agirlik-proje-tp").value) / 100;
-            const finalAgirlik = parseFloat(document.getElementById("final-agirlik-proje-tp").value) / 100;
-            const gecmeNotu = parseInt(document.getElementById("gecme-notu-proje-tp").value);
+function hesaplaProjeToplamPuan() {
+    // Inputlardan notları al
+    const vizeNotu = parseFloat(document.getElementById("vize-proje-tp").value);
+    const projeNotu = parseFloat(document.getElementById("proje-proje-tp").value);
+    const finalNotu = parseFloat(document.getElementById("final-proje-tp").value);
+    
+    // Ağırlık değerlerini al
+    const vizeAgirlikDegeri = document.getElementById("vize-agirlik-proje-tp").value;
+    const projeAgirlikDegeri = document.getElementById("proje-agirlik-proje-tp").value;
+    const finalAgirlikDegeri = document.getElementById("final-agirlik-proje-tp").value;
+    
+    const vizeAgirlik = parseFloat(vizeAgirlikDegeri) / 100;
+    const projeAgirlik = parseFloat(projeAgirlikDegeri) / 100;
+    const finalAgirlik = parseFloat(finalAgirlikDegeri) / 100;
+    const gecmeNotu = parseInt(document.getElementById("gecme-notu-proje-tp").value);
 
-            const resultBox = document.getElementById("sonuc-proje-tp");
-            const tableRow = document.getElementById("toplam-satir-proje-tp");
-            const gecmeDurumuElement = document.getElementById("gecmeDurumu-proje-tp");
-            const resultIcon = document.getElementById('icon-proje-tp');
+    // Gerekli HTML elementlerini seç
+    const resultBox = document.getElementById("sonuc-proje-tp");
+    const tableRow = document.getElementById("toplam-satir-proje-tp");
+    const gecmeDurumuElement = document.getElementById("gecmeDurumu-proje-tp");
+    const resultIcon = document.getElementById('icon-proje-tp');
 
-            resultBox.classList.remove('show', 'box-pass', 'box-fail');
-            resultIcon.className = 'result-icon'; 
+    // Her hesaplamada kutuyu sıfırla
+    resultBox.classList.remove('show', 'box-pass', 'box-fail');
+    resultIcon.className = 'result-icon'; 
 
-            if (isNaN(vizeNotu) || isNaN(projeNotu) || isNaN(finalNotu) || vizeNotu < 0 || vizeNotu > 100 || projeNotu < 0 || projeNotu > 100 || finalNotu < 0 || finalNotu > 100) {
-                alert("Lütfen tüm not alanlarına geçerli (0-100 arasında) değerler giriniz.");
-                return;
-            }
-            if (Math.abs(vizeAgirlik + projeAgirlik + finalAgirlik - 1) > 0.01) { 
-                alert("Ağırlıklar toplamı %100 olmalıdır. Lütfen Vize ve Proje ağırlıklarını kontrol edin.");
-                return;
-            }
+    // Geçerlilik kontrolü
+    if (isNaN(vizeNotu) || isNaN(projeNotu) || isNaN(finalNotu) || vizeNotu < 0 || vizeNotu > 100 || projeNotu < 0 || projeNotu > 100 || finalNotu < 0 || finalNotu > 100) {
+        alert("Lütfen tüm not alanlarına geçerli (0-100 arasında) değerler giriniz.");
+        return;
+    }
 
-            const vizePuanRaw = vizeNotu * vizeAgirlik;
-            const projePuanRaw = projeNotu * projeAgirlik;
-            const finalPuanRaw = finalNotu * finalAgirlik;
+    // --- GÖRSEL GÜNCELLEME: Sadece buton basılınca tablodaki % yazılarını değiştirir ---
+    document.getElementById("vizeYuzde-proje-tp").textContent = vizeAgirlikDegeri + "%";
+    document.getElementById("projeYuzde-proje-tp").textContent = projeAgirlikDegeri + "%";
+    document.getElementById("finalYuzde-proje-tp").textContent = finalAgirlikDegeri + "%";
 
-            const vizePuanInt = Math.floor(vizePuanRaw);
-            const projePuanInt = Math.floor(projePuanRaw);
-            const finalPuanInt = Math.floor(finalPuanRaw);
-            const toplamPuan = vizePuanInt + projePuanInt + finalPuanInt;
+    // Hesaplamalar (Tam Sayı Katkısı Kuralına Göre)
+    const vizePuanRaw = vizeNotu * vizeAgirlik;
+    const projePuanRaw = projeNotu * projeAgirlik;
+    const finalPuanRaw = finalNotu * finalAgirlik;
 
-            document.getElementById("vizePuan-proje-tp").textContent = vizePuanInt + " (Ham: " + vizePuanRaw.toFixed(2) + ")";
-            document.getElementById("projePuan-proje-tp").textContent = projePuanInt + " (Ham: " + projePuanRaw.toFixed(2) + ")";
-            document.getElementById("finalPuan-proje-tp").textContent = finalPuanInt + " (Ham: " + finalPuanRaw.toFixed(2) + ")";
-            document.getElementById("toplamPuan-proje-tp").textContent = toplamPuan.toFixed(0);
+    const vizePuanInt = Math.floor(vizePuanRaw);
+    const projePuanInt = Math.floor(projePuanRaw);
+    const finalPuanInt = Math.floor(finalPuanRaw);
+    const toplamPuan = vizePuanInt + projePuanInt + finalPuanInt;
 
-            if (toplamPuan >= gecmeNotu) {
-                gecmeDurumuElement.textContent = "GEÇTİ!";
-                gecmeDurumuElement.style.color = 'var(--success-color)';
-                tableRow.classList.remove('fail');
-                resultBox.classList.add('box-pass'); 
-                resultIcon.classList.add('fa-solid', 'fa-face-smile', 'icon-pass');
-            } else {
-                gecmeDurumuElement.textContent = "KALDI!";
-                gecmeDurumuElement.style.color = 'var(--fail-color)';
-                tableRow.classList.add('fail');
-                resultBox.classList.add('box-fail'); 
-                resultIcon.classList.add('fa-solid', 'fa-face-frown', 'icon-fail');
-            }
-            
-            setTimeout(() => {
-                resultBox.classList.add('show');
-            }, 10);
-        }
-        
+    // Tabloyu verilerle doldur
+    document.getElementById("vizePuan-proje-tp").textContent = vizePuanInt + " (Ham: " + vizePuanRaw.toFixed(2) + ")";
+    document.getElementById("projePuan-proje-tp").textContent = projePuanInt + " (Ham: " + projePuanRaw.toFixed(2) + ")";
+    document.getElementById("finalPuan-proje-tp").textContent = finalPuanInt + " (Ham: " + finalPuanRaw.toFixed(2) + ")";
+    document.getElementById("toplamPuan-proje-tp").textContent = toplamPuan.toFixed(0);
+
+    // Geçme/Kalma Durumu ve Stil Uygulama
+    if (toplamPuan >= gecmeNotu) {
+        gecmeDurumuElement.textContent = "GEÇTİ!";
+        gecmeDurumuElement.style.color = 'var(--success-color)';
+        tableRow.classList.remove('fail');
+        resultBox.classList.add('box-pass'); 
+        resultIcon.classList.add('fa-solid', 'fa-face-smile');
+    } else {
+        gecmeDurumuElement.textContent = "KALDI!";
+        gecmeDurumuElement.style.color = 'var(--fail-color)';
+        tableRow.classList.add('fail');
+        resultBox.classList.add('box-fail'); 
+        resultIcon.classList.add('fa-solid', 'fa-face-frown');
+    }
+    
+    // Detay panelini görünür yap (Gecikmeli animasyon için)
+    setTimeout(() => {
+        resultBox.classList.add('show');
+    }, 10);
+} 
         // 4. Projeli Final İhtiyacı Hesaplama Fonksiyonu
         function hesaplaProjeFinalIhtiyaci() {
             const vizeNotu = parseFloat(document.getElementById("vize-proje-fi").value);
