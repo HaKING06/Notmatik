@@ -170,33 +170,41 @@
         loadCards();
     });
 
-    async function handleSmartPaste() {
-        try {
-            // Panodaki metni oku
-            const text = await navigator.clipboard.readText();
-            
-            // Format kontrolü (T: ile başlıyor mu ve | içeriyor mu?)
-            if (!text || !text.includes('|') || !text.startsWith('T:')) {
-                alert("Panoda geçerli bir Notmatik verisi bulunamadı! Lütfen önce hesaplama yapıp 'Kopyala' butonuna basın.");
-                return;
-            }
-
-            const dersAdi = prompt("Dersin Adını Giriniz:");
-            if (!dersAdi) return;
-
-            const newCourse = { id: Date.now(), name: dersAdi, data: text };
-            const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
-            courses.unshift(newCourse);
-            localStorage.setItem('savedGoals', JSON.stringify(courses));
-            
-            loadCards();
-            
-        } catch (err) {
-            alert("Pano erişim izni reddedildi. Lütfen tarayıcı izinlerini kontrol edin.");
+async function handleSmartPaste() {
+    try {
+        // 1. Panodaki metni oku
+        const text = await navigator.clipboard.readText();
+        
+        // 2. Format kontrolü
+        if (!text || !text.includes('|') || !text.startsWith('T:')) {
+            alert("Panoda geçerli bir Notmatik verisi bulunamadı!");
+            return;
         }
-    }
 
-    function loadCards() {
+        // 3. Ders adını al
+        const dersAdi = prompt("Dersin Adını Giriniz:");
+        if (!dersAdi) return;
+
+        // 4. Veriyi kaydet
+        const newCourse = { id: Date.now(), name: dersAdi, data: text };
+        const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
+        courses.unshift(newCourse);
+        localStorage.setItem('savedGoals', JSON.stringify(courses));
+        
+        // 5. Kartları yenile
+        loadCards();
+
+        // 🔑 6. PANOYI TEMİZLE (İstediğin işlem burada yapılıyor)
+        await navigator.clipboard.writeText(""); 
+        
+        alert("Ders başarıyla kaydedildi!");
+        
+    } catch (err) {
+        alert("Pano erişim izni reddedildi.");
+    }
+}
+
+function loadCards() {
         const list = document.getElementById('courseList');
         const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
         
