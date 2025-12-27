@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOTMATİK | Hedef Defterim</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -14,7 +15,6 @@
             --bg: #f0f2f5;
             --card: #ffffff;
             --text: #212529;
-            --input-border: #cbd5e0;
             --shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
 
@@ -24,7 +24,6 @@
             --bg: #121212;
             --card: #1e1e1e;
             --text: #e0e0e0;
-            --input-border: #3d3d3d;
             --shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
@@ -37,7 +36,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Navigasyon Bar */
         nav {
             background: var(--primary-bg);
             padding: 15px 5%;
@@ -61,9 +59,7 @@
             text-decoration: none; 
             font-size: 0.9em; 
             font-weight: 600;
-            transition: 0.3s;
         }
-        .btn-back:hover { background: var(--accent); color: #1f3050; }
 
         .container {
             max-width: 1100px;
@@ -71,54 +67,45 @@
             padding: 0 20px;
         }
 
-        /* Veri Giriş Alanı */
-        .action-card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
+        /* Yeni Akıllı Panel */
+        .smart-action-area {
+            text-align: center;
             margin-bottom: 50px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            padding: 40px;
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 2px dashed var(--accent);
         }
 
-        .action-card h2 { margin-top: 0; text-align: center; font-size: 1.2em; }
+        .smart-action-area h2 { margin-top: 0; font-weight: 700; }
+        .smart-action-area p { opacity: 0.7; font-size: 0.9em; margin-bottom: 25px; }
 
-        textarea {
-            width: 100%;
-            min-height: 60px;
-            padding: 12px;
-            border-radius: 10px;
-            border: 2px solid var(--input-border);
-            background: var(--bg);
-            color: var(--text);
-            font-family: monospace;
-            box-sizing: border-box;
-            outline: none;
-            margin: 15px 0;
-            transition: 0.3s;
-        }
-        textarea:focus { border-color: var(--accent); }
-
-        .btn-save {
+        .btn-smart-paste {
             background: var(--accent);
             color: #1f3050;
             border: none;
-            padding: 14px;
-            border-radius: 10px;
+            padding: 18px 35px;
+            border-radius: 50px;
             font-weight: 800;
+            font-size: 1.1em;
             cursor: pointer;
-            width: 100%;
             transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(0, 188, 212, 0.3);
         }
-        .btn-save:hover { opacity: 0.9; transform: scale(0.98); }
 
-        /* Dinamik Kart Düzeni */
+        .btn-smart-paste:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 188, 212, 0.4);
+        }
+
         .course-grid {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center; /* Kartları merkeze toplar */
+            justify-content: center;
             gap: 25px;
         }
 
@@ -128,59 +115,48 @@
             border-radius: 16px;
             box-shadow: var(--shadow);
             position: relative;
-            border-top: 4px solid var(--accent);
+            border-top: 5px solid var(--accent);
             width: 100%;
-            max-width: 350px; /* PC'de tek kartın devasa olmasını önler */
-            box-sizing: border-box;
+            max-width: 350px;
             transition: 0.3s;
+            animation: slideUp 0.4s ease-out;
         }
 
-        .course-card h3 { margin: 0 0 15px 0; color: var(--accent); font-size: 1.2em; padding-right: 25px; }
-
-        .grid-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 15px;
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .info-item label { display: block; font-size: 0.65em; color: #888; font-weight: 700; margin-bottom: 2px; }
+        .course-card h3 { margin: 0 0 15px 0; color: var(--accent); font-size: 1.2em; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 10px; }
+
+        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .info-item label { display: block; font-size: 0.65em; color: #888; font-weight: 700; text-transform: uppercase; }
         .info-item span { font-weight: 700; font-size: 1.05em; }
 
-        .target-box {
-            background: var(--bg);
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-        }
+        .target-box { background: var(--bg); padding: 15px; border-radius: 12px; text-align: center; }
         .target-box label { display: block; font-size: 0.7em; font-weight: 600; opacity: 0.6; }
-        .target-box b { font-size: 1.8em; color: var(--accent); display: block; margin-top: 5px; }
+        .target-box b { font-size: 2em; color: var(--accent); display: block; margin-top: 5px; }
 
-        .delete-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            color: #ff5252;
-            cursor: pointer;
-            opacity: 0.5;
-        }
+        .delete-btn { position: absolute; top: 15px; right: 15px; color: #ff5252; cursor: pointer; opacity: 0.3; transition: 0.3s; }
         .delete-btn:hover { opacity: 1; }
 
-        .empty-state { text-align: center; padding: 60px 0; width: 100%; opacity: 0.5; }
+        .empty-state { text-align: center; padding: 60px 0; width: 100%; opacity: 0.4; }
     </style>
 </head>
 <body>
 
 <nav>
     <a href="index.html" class="nav-logo">NOTMATİK <i class="fa-solid fa-graduation-cap"></i></a>
-    <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Geri Dön</a>
+    <a href="index.html" class="btn-back"><i class="fa-solid fa-calculator"></i> Hesaplayıcıya Dön</a>
 </nav>
 
 <div class="container">
-    <div class="action-card">
-        <h2><i class="fa-solid fa-paste"></i> Veriyi Yapıştır</h2>
-        <textarea id="dataInput" placeholder="Kopyalanan veriyi buraya ekle..."></textarea>
-        <button class="btn-save" onclick="saveCourse()">HEDEFİ LİSTEYE EKLE</button>
+    <div class="smart-action-area">
+        <h2>Ders Not Defteri</h2>
+        <p>Hesapladığın veriyi kopyaladıysan aşağıdaki butona basman yeterli.</p>
+        <button class="btn-smart-paste" onclick="handleSmartPaste()">
+            <i class="fa-solid fa-file-import"></i> PANODAN YAPIŞTIR VE EKLE
+        </button>
     </div>
 
     <div id="courseList" class="course-grid">
@@ -189,35 +165,52 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Dark mode durumunu ana sayfadan çek
         if (localStorage.getItem('darkMode') === 'enabled') {
             document.body.classList.add('dark-mode');
         }
         loadCards();
     });
 
-    function saveCourse() {
-        const input = document.getElementById('dataInput').value.trim();
-        if (!input || !input.includes('|')) { alert("Lütfen geçerli bir veri yapıştırın!"); return; }
+async function handleSmartPaste() {
+    try {
+        // 1. Panodaki metni oku
+        const text = await navigator.clipboard.readText();
+        
+        // 2. Format kontrolü
+        if (!text || !text.includes('|') || !text.startsWith('T:')) {
+            alert("Panoda geçerli bir Notmatik verisi bulunamadı!");
+            return;
+        }
 
-        const name = prompt("Dersin Adı:");
-        if (!name) return;
+        // 3. Ders adını al
+        const dersAdi = prompt("Dersin Adını Giriniz:");
+        if (!dersAdi) return;
 
-        const newCourse = { id: Date.now(), name: name, data: input };
+        // 4. Veriyi kaydet
+        const newCourse = { id: Date.now(), name: dersAdi, data: text };
         const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
         courses.unshift(newCourse);
         localStorage.setItem('savedGoals', JSON.stringify(courses));
         
-        document.getElementById('dataInput').value = "";
+        // 5. Kartları yenile
         loadCards();
-    }
 
-    function loadCards() {
+        // 🔑 6. PANOYI TEMİZLE (İstediğin işlem burada yapılıyor)
+        await navigator.clipboard.writeText(""); 
+        
+        alert("Ders başarıyla kaydedildi!");
+        
+    } catch (err) {
+        alert("Pano erişim izni reddedildi.");
+    }
+}
+
+function loadCards() {
         const list = document.getElementById('courseList');
         const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
         
         if (courses.length === 0) {
-            list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-ghost fa-3x"></i><p>Henüz bir kayıt yok.</p></div>`;
+            list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-clipboard-list fa-3x"></i><p>Henüz kayıtlı bir hedef bulunmuyor.</p></div>`;
             return;
         }
 

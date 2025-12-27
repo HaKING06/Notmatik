@@ -496,7 +496,11 @@ position: absolute;
     <header>
         <h1>NOTMATİK <i class="fa-solid fa-graduation-cap" style="color: var(--accent-color);"></i></h1>
         <p style="font-size: 1.1em; color: #b0c2e3; font-weight: 400;">Akademik Başarı Hesaplama Platformu</p>
-        
+        <div style="margin-top: 15px;">
+    <a href="not-defteri.html" style="text-decoration: none; background: rgba(255,255,255,0.15); color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.85em; border: 1px solid var(--accent-color); transition: 0.3s;">
+        <i class="fa-solid fa-bookmark"></i> KAYITLI HEDEFLERİM
+    </a>
+</div>
         <div class="main-nav-tabs">
             <div class="main-nav-tab active" id="tab-normal" onclick="showMainCalculator('normal')"><i class="fa-solid fa-book-open"></i> Vize-Final Hesap</div>
             <div class="main-nav-tab" id="tab-proje" onclick="showMainCalculator('proje')"><i class="fa-solid fa-code-branch"></i> Proje Dahil Hesap</div>
@@ -630,6 +634,9 @@ position: absolute;
                         
                         <p id="final-uyari" style="display:none; color: var(--fail-color); font-weight: 600; margin-top: 10px;"></p>
                     </div>
+                    <button class="calculate-btn" onclick="prepareForVault(this)" style="background: #4caf50; margin-top: 15px;">
+    <i class="fa-solid fa-copy"></i> BU HEDEFİ KAYDET
+</button>
                 </div>
             </div>
         </div>
@@ -771,6 +778,9 @@ position: absolute;
                         
                         <p id="final-uyari-proje" style="display:none; color: var(--fail-color); font-weight: 600; margin-top: 10px;"></p>
                     </div>
+                    <button class="calculate-btn" onclick="prepareForVault(this)" style="background: #4caf50; margin-top: 15px;">
+    <i class="fa-solid fa-copy"></i> BU HEDEFİ KAYDET
+</button>
                 </div>
             </div>
         </div>
@@ -795,7 +805,7 @@ position: absolute;
     </div>
     <footer>
         <p>&copy; 2025 NOTMATİK. Tüm Hakları Saklıdır.</p>
-        <p><b>halitguns06.dev</b> | Versiyon: 1.2</p>
+        <p><b>halitguns06.dev</b> | Versiyon: 1.4</p>
         <p style="margin-top: 10px;">* Hesaplamalar <b>tam sayı katkısı</b> kuralına göre yapılmaktadır.</p>
     </footer>
 
@@ -1207,7 +1217,45 @@ function hesaplaProjeToplamPuan() {
             }
         };
     }
+    // Tüm inputlara Enter dinleyicisi ekle
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            // Hangi sekme aktifse onun butonunu tetikle
+            const activeBtn = document.querySelector('.calculator-content.active .sub-calculator-content.active .calculate-btn');
+            if (activeBtn) activeBtn.click();
+        }
+    });
+});
 
+function prepareForVault(btn) {
+    const parent = btn.closest('.result-box');
+    const isProje = parent.id.includes('proje');
+    let data = "";
+
+    if (!isProje) {
+        const vize = document.getElementById("vize-fi").value;
+        const vAg = document.getElementById("vize-agirlik-fi").value; // Vize %
+        const fAg = document.getElementById("final-agirlik-fi").value; // Final %
+        const hedef = document.getElementById("hedefPuan-fi").value;
+        const gereken = document.getElementById("finalIhtiyaci-fi").textContent;
+        data = `T:NORM|V:${vize}|VA:${vAg}|FA:${fAg}|H:${hedef}|G:${gereken}`;
+    } else {
+        const vize = document.getElementById("vize-proje-fi").value;
+        const proje = document.getElementById("proje-proje-fi").value;
+        const vAg = document.getElementById("vize-agirlik-proje-fi").value; // Vize %
+        const pAg = document.getElementById("proje-agirlik-proje-fi").value; // Proje %
+        const fAg = document.getElementById("final-agirlik-proje-fi").value; // Final %
+        const hedef = document.getElementById("hedefPuan-proje-fi").value;
+        const gereken = document.getElementById("finalIhtiyaci-proje-fi").textContent;
+        data = `T:PROJ|V:${vize}|P:${proje}|VA:${vAg}|PA:${pAg}|FA:${fAg}|H:${hedef}|G:${gereken}`;
+    }
+
+    navigator.clipboard.writeText(data).then(() => {
+        alert("Hedef ve ağırlıklar kopyalandı! Notlarım sayfasına yönlendiriliyorsunuz.");
+        window.location.href = "not-defteri.html"; 
+    });
+}
     window.onload = checkAndShowModalWithTimer;
 
 
