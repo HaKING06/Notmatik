@@ -141,6 +141,12 @@
         .delete-btn:hover { opacity: 1; }
 
         .empty-state { text-align: center; padding: 60px 0; width: 100%; opacity: 0.4; }
+
+        /* Footer */
+        footer {
+            background-color: #1f3050; color: #b0c2e3; padding: 25px 0; width: 100%;
+            text-align: center; font-size: 0.85em; flex-shrink: 0; margin-top: auto;
+        }
     </style>
 </head>
 <body>
@@ -162,6 +168,12 @@
     <div id="courseList" class="course-grid">
         </div>
 </div>
+
+    <footer>
+        <p>&copy; 2025 NOTMATİK. Tüm Hakları Saklıdır.</p>
+        <p><b>halitguns06.dev</b> | Versiyon: 1.2</p>
+    </footer>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -206,46 +218,75 @@ async function handleSmartPaste() {
 }
 
 function loadCards() {
-        const list = document.getElementById('courseList');
-        const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
-        
-        if (courses.length === 0) {
-            list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-clipboard-list fa-3x"></i><p>Henüz kayıtlı bir hedef bulunmuyor.</p></div>`;
-            return;
-        }
-
-        list.innerHTML = courses.map(course => {
-            const parts = {};
-            course.data.split('|').forEach(p => { 
-                const [k, v] = p.split(':'); 
-                parts[k] = v; 
-            });
-
-            return `
-                <div class="course-card">
-                    <i class="fa-solid fa-trash-can delete-btn" onclick="deleteItem(${course.id})"></i>
-                    <h3>${course.name}</h3>
-                    <div class="grid-info">
-                        <div class="info-item">
-                            <label>VİZE (%${parts.VA})</label>
-                            <span>${parts.V || '-'}</span>
-                        </div>
-                        ${parts.P ? `<div class="info-item"><label>PROJE (%${parts.PA})</label><span>${parts.P}</span></div>` : ''}
-                        <div class="info-item">
-                            <label>HEDEF ORT.</label>
-                            <span>${parts.H}</span>
-                        </div>
-                    </div>
-                    <div class="target-box">
-                        <label>FİNAL (%${parts.FA}) ALMAN GEREKEN</label>
-                        <b>${parts.G}</b>
-                    </div>
-                </div>
-            `;
-        }).join('');
+    const list = document.getElementById('courseList');
+    const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
+    
+    if (courses.length === 0) {
+        list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-clipboard-list fa-3x"></i><p>Henüz kayıtlı bir hedef bulunmuyor.</p></div>`;
+        return;
     }
 
-    function deleteItem(id) {
+    list.innerHTML = courses.map(course => {
+        const parts = {};
+        course.data.split('|').forEach(p => { 
+            const index = p.indexOf(':');
+            if (index !== -1) {
+                const k = p.substring(0, index);
+                const v = p.substring(index + 1);
+                parts[k] = v;
+            }
+        });
+
+        let displayNote = "";
+        if (parts.GS && parts.GS !== "") {
+            displayNote = `
+                <div style="margin-bottom:8px;">
+                    <span style="font-size: 0.75em; display:block; opacity:0.6; font-weight:700;">HEDEF İÇİN</span>
+                    <span style="color:var(--accent); font-size:1.6em; font-weight:900;">${parts.GH}</span>
+                </div>
+                <div style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top:8px;">
+                    <span style="font-size: 0.75em; display:block; opacity:0.6; font-weight:700; color:var(--warn);">ŞARTLI (${parts.SALT}) İÇİN</span>
+                    <span style="color:var(--warn); font-size:1.4em; font-weight:900;">${parts.GS}</span>
+                </div>
+            `;
+        } else {
+            displayNote = `
+                <span style="font-size: 0.75em; display:block; opacity:0.6; font-weight:700;">GEREKEN FİNAL NOTU</span>
+                <span style="color:var(--accent); font-size:2.2em; font-weight:900;">${parts.GH || '-'}</span>
+            `;
+        }
+
+        return `
+            <div class="course-card">
+                <i class="fa-solid fa-trash-can delete-btn" onclick="deleteItem(${course.id})"></i>
+                <h3 style="border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom:10px;">${course.name}</h3>
+                <div class="grid-info" style="display: flex; justify-content: space-around; padding: 10px 0; gap: 5px;">
+                    <div class="info-item" style="text-align:center;">
+                        <label style="display:block; font-size:0.6rem; color:#888; font-weight:700;">VİZE (%${parts.VA || '0'})</label>
+                        <span style="font-weight:800; font-size:1em;">${parts.V || '-'}</span>
+                    </div>
+                    
+                    ${parts.P ? `
+                    <div class="info-item" style="text-align:center;">
+                        <label style="display:block; font-size:0.6rem; color:#888; font-weight:700;">PROJE (%${parts.PA})</label>
+                        <span style="font-weight:800; font-size:1em;">${parts.P}</span>
+                    </div>` : ''}
+
+                    <div class="info-item" style="text-align:center;">
+                        <label style="display:block; font-size:0.6rem; color:#888; font-weight:700;">HEDEF</label>
+                        <span style="font-weight:800; font-size:1em;">${parts.H || '-'}</span>
+                    </div>
+                </div>
+                <div class="target-box" style="background:var(--bg); padding:12px; border-radius:12px; text-align:center; margin-top:10px;">
+                    ${displayNote}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+
+function deleteItem(id) {
         if (confirm('Dersi silmek istediğine emin misin?')) {
             let courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
             courses = courses.filter(c => c.id !== id);

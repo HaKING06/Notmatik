@@ -206,6 +206,7 @@ position: absolute;
     color: inherit;
 }
 
+
 /* ======================================= */
         /* Mobil Reklam Alanı (Footer Üstü) */
  /* ======================================= */
@@ -263,6 +264,13 @@ position: absolute;
 }
 
 
+/* Modern Switch Stili */
+.switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--accent-color); }
+input:checked + .slider:before { transform: translateX(26px); }
 
         /* ======================================= */
         /* 2. TEMEL YAPISAL STİLLER */
@@ -421,8 +429,55 @@ position: absolute;
         .final-ihtiyaci-label { font-size: 1.4em; color: var(--primary-dark); font-weight: 700; display: block; margin-top: 10px; }
         body.dark-mode .final-ihtiyaci-label { color: var(--text-color); }
         
-        .final-ihtiyaci-score { font-size: 3.5em; font-weight: 900; display: block; margin: 10px 0; transition: color var(--transition-speed); }
+        .final-ihtiyaci-score {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 20px;
+            margin: 20px 0;
+            width: 100%;
+        }
+        .score-item {
+            flex: 1;
+            max-width: 250px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .score-item .label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--light-text);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .hedef-not-label {
+            font-size: 0.4em; /* Ana puana göre oranı */
+            color: var(--light-text);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .sartli-not-box {
+            font-size: 0.7em; /* Ana puana göre oranı */
+            color: var(--warn);
+            border-top: 1px dashed var(--accent-color);
+            padding-top: 10px;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .score-item .value {
+            font-size: 2.5rem; /* Rakamların ana büyüklüğü */
+            font-weight: 900;
+            color: var(--accent-color);
+        }
 
+        /* Şartlı not için özel renk */
+        .score-item.sartli .value {
+            color: var(--warn);
+        }
 
         /* Footer */
         footer {
@@ -457,7 +512,23 @@ position: absolute;
             .container { padding: 30px 15px; }
             .weight-setting { grid-template-columns: 1fr; }
             .final-result-grid { grid-template-columns: 1fr; } 
+            .final-ihtiyaci-score { font-size: 2.5em; } /* Mobilde çok devasa olmasın */
+            .final-ihtiyaci-label { font-size: 1.1em; }
         }
+        @media (max-width: 768px) {
+        .final-ihtiyaci-score {
+                flex-direction: column;
+                align-items: center;
+            }
+            .score-item {
+                width: 100%;
+                max-width: none;
+            }
+            .score-item .value {
+                font-size: 2rem;
+            }
+        }
+        
     </style>
 </head>
 <body class="">
@@ -496,7 +567,7 @@ position: absolute;
     <header>
         <h1>NOTMATİK <i class="fa-solid fa-graduation-cap" style="color: var(--accent-color);"></i></h1>
         <p style="font-size: 1.1em; color: #b0c2e3; font-weight: 400;">Akademik Başarı Hesaplama Platformu</p>
-        <div style="margin-top: 15px;">
+<div style="margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
     <a href="not-defteri.html" style="text-decoration: none; background: rgba(255,255,255,0.15); color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.85em; border: 1px solid var(--accent-color); transition: 0.3s;">
         <i class="fa-solid fa-bookmark"></i> KAYITLI HEDEFLERİM
     </a>
@@ -614,6 +685,24 @@ position: absolute;
                     <input type="number" id="vize-fi" placeholder="Vize notunu giriniz" min="0" max="100" required>
                 </div>
 
+
+                <div class="sartli-control-wrapper" style="margin: 20px 0; padding: 15px; background: var(--weight-bg); border-radius: 12px; border: 1px solid var(--accent-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; font-size: 0.9em; color: var(--primary-dark);">
+                            <i class="fa-solid fa-graduation-cap"></i> Şartlı Geçişi Göster
+                        </span>
+                        <label class="switch">
+                            <input type="checkbox" class="sartli-toggle" onchange="toggleSartliUI(event)">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="sartli-input-area" style="display: none; margin-top: 15px; border-top: 1px dashed var(--accent-color); padding-top: 15px;">
+                        <label style="font-size: 0.75em; font-weight: 700; color: var(--light-text);">ŞARTLI GEÇME ALT SINIRI (Örn: 50)</label>
+                        <input type="number" class="sartli-sinir-input" value="50" style="margin-top: 5px; height: 40px;">
+                    </div>
+                </div>
+
                 <button class="calculate-btn" onclick="hesaplaFinalIhtiyaci()">GEREKLİ FİNAL NOTUNU HESAPLA</button>
 
                 <div class="result-box" id="sonuc-final-ihtiyaci-normal">
@@ -635,8 +724,8 @@ position: absolute;
                         <p id="final-uyari" style="display:none; color: var(--fail-color); font-weight: 600; margin-top: 10px;"></p>
                     </div>
                     <button class="calculate-btn" onclick="prepareForVault(this)" style="background: #4caf50; margin-top: 15px;">
-    <i class="fa-solid fa-copy"></i> BU HEDEFİ KAYDET
-</button>
+                        <i class="fa-solid fa-copy"></i> BU HEDEFİ KAYDET
+                    </button>
                 </div>
             </div>
         </div>
@@ -758,6 +847,23 @@ position: absolute;
                     <input type="number" id="proje-proje-fi" placeholder="Proje notunu giriniz" min="0" max="100" required>
                 </div>
 
+                <div class="sartli-control-wrapper" style="margin: 20px 0; padding: 15px; background: var(--weight-bg); border-radius: 12px; border: 1px solid var(--accent-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 700; font-size: 0.9em; color: var(--primary-dark);">
+                            <i class="fa-solid fa-graduation-cap"></i> Şartlı Geçişi Göster
+                        </span>
+                        <label class="switch">
+                            <input type="checkbox" class="sartli-toggle" onchange="toggleSartliUI(event)">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="sartli-input-area" style="display: none; margin-top: 15px; border-top: 1px dashed var(--accent-color); padding-top: 15px;">
+                        <label style="font-size: 0.75em; font-weight: 700; color: var(--light-text);">ŞARTLI GEÇME ALT SINIRI (Örn: 50)</label>
+                        <input type="number" class="sartli-sinir-input" value="50" style="margin-top: 5px; height: 40px;">
+                    </div>
+                </div>
+
                 <button class="calculate-btn" onclick="hesaplaProjeFinalIhtiyaci()">GEREKLİ FİNAL NOTUNU HESAPLA</button>
 
                 <div class="result-box" id="sonuc-proje-fi">
@@ -805,7 +911,7 @@ position: absolute;
     </div>
     <footer>
         <p>&copy; 2025 NOTMATİK. Tüm Hakları Saklıdır.</p>
-        <p><b>halitguns06.dev</b> | Versiyon: 1.4</p>
+        <p><b>halitguns06.dev</b> | Versiyon: 1.6</p>
         <p style="margin-top: 10px;">* Hesaplamalar <b>tam sayı katkısı</b> kuralına göre yapılmaktadır.</p>
     </footer>
 
@@ -1013,6 +1119,36 @@ function hesaplaToplamPuan() {
                 finalScoreElement.classList.add('accent-color');
             }
             
+                        // ÖRNEK (Normal Hesaplama İçin):
+            // Fonksiyonların içine ekle:
+            const sartliAktif = document.querySelector('.sartli-toggle').checked;
+            const sartliSinir = parseInt(document.querySelector('.sartli-sinir-input').value) || 50;
+
+            // Şartlı not hesabı
+            const finaldenSartliGereken = sartliSinir - vizeKatkisiInt;
+            let sartliIhtiyac = Math.ceil(finaldenSartliGereken / finalAgirlik);
+            sartliIhtiyac = sartliIhtiyac > 0 ? (sartliIhtiyac > 100 ? "X" : sartliIhtiyac) : 0;
+
+            if (sartliAktif) {
+                finalScoreElement.innerHTML = `
+                    <div class="score-item">
+                        <span class="label">Hedef (${hedefToplamPuan}) İçin</span>
+                        <span class="value">${finalNotuIhtiyaci}</span>
+                    </div>
+                    <div class="score-item sartli">
+                        <span class="label">Şartlı (${sartliSinir}) İçin</span>
+                        <span class="value">${sartliIhtiyac}</span>
+                    </div>
+                `;
+            } else {
+                finalScoreElement.innerHTML = `
+                    <div class="score-item">
+                        <span class="label">Gereken Final Notu</span>
+                        <span class="value">${finalNotuIhtiyaci}</span>
+                    </div>
+                `;
+            }
+
             setTimeout(() => {
                 resultBox.classList.add('show');
             }, 10);
@@ -1093,64 +1229,81 @@ function hesaplaProjeToplamPuan() {
     }, 10);
 } 
         // 4. Projeli Final İhtiyacı Hesaplama Fonksiyonu
-        function hesaplaProjeFinalIhtiyaci() {
-            const vizeNotu = parseFloat(document.getElementById("vize-proje-fi").value);
-            const projeNotu = parseFloat(document.getElementById("proje-proje-fi").value);
-            const hedefToplamPuan = parseInt(document.getElementById("hedefPuan-proje-fi").value);
-            
-            const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-proje-fi").value) / 100;
-            const projeAgirlik = parseFloat(document.getElementById("proje-agirlik-proje-fi").value) / 100;
-            const finalAgirlik = parseFloat(document.getElementById("final-agirlik-proje-fi").value) / 100;
+function hesaplaProjeFinalIhtiyaci() {
+    const vizeNotu = parseFloat(document.getElementById("vize-proje-fi").value);
+    const projeNotu = parseFloat(document.getElementById("proje-proje-fi").value);
+    const hedefToplamPuan = parseInt(document.getElementById("hedefPuan-proje-fi").value);
+    
+    const vizeAgirlik = parseFloat(document.getElementById("vize-agirlik-proje-fi").value) / 100;
+    const projeAgirlik = parseFloat(document.getElementById("proje-agirlik-proje-fi").value) / 100;
+    const finalAgirlik = parseFloat(document.getElementById("final-agirlik-proje-fi").value) / 100;
 
-            const resultBox = document.getElementById("sonuc-proje-fi");
-            const uyariElementi = document.getElementById("final-uyari-proje");
-            const finalScoreElement = document.getElementById('finalIhtiyaci-proje-fi');
+    const resultBox = document.getElementById("sonuc-proje-fi");
+    const uyariElementi = document.getElementById("final-uyari-proje");
+    const finalScoreElement = document.getElementById('finalIhtiyaci-proje-fi');
 
-            resultBox.classList.remove('show');
-            uyariElementi.style.display = 'none';
-            finalScoreElement.classList.remove('pass-color', 'accent-color', 'fail-color');
+    resultBox.classList.remove('show');
+    uyariElementi.style.display = 'none';
 
-            if (isNaN(vizeNotu) || isNaN(projeNotu) || vizeNotu < 0 || vizeNotu > 100 || projeNotu < 0 || projeNotu > 100) {
-                alert("Lütfen geçerli (0-100 arasında) vize ve proje notları giriniz.");
-                return;
-            }
-            
-            if (finalAgirlik === 0) {
-                alert("Final ağırlığı sıfır olamaz.");
-                return;
-            }
+    if (isNaN(vizeNotu) || isNaN(projeNotu) || vizeNotu < 0 || vizeNotu > 100 || projeNotu < 0 || projeNotu > 100) {
+        alert("Lütfen geçerli (0-100 arasında) vize ve proje notları giriniz.");
+        return;
+    }
+    
+    if (finalAgirlik <= 0) {
+        alert("Final ağırlığı sıfırdan büyük olmalıdır.");
+        return;
+    }
 
-            const vizeKatkisiInt = Math.floor(vizeNotu * vizeAgirlik);
-            const projeKatkisiInt = Math.floor(projeNotu * projeAgirlik);
-            const vpToplamKatkiInt = vizeKatkisiInt + projeKatkisiInt;
-            
-            const finaldenGerekenInt = hedefToplamPuan - vpToplamKatkiInt;
-            const rawFinalNotu = finaldenGerekenInt / finalAgirlik;
-            const finalNotuIhtiyaci = Math.ceil(rawFinalNotu);
+    const vizeKatkisiInt = Math.floor(vizeNotu * vizeAgirlik);
+    const projeKatkisiInt = Math.floor(projeNotu * projeAgirlik);
+    const vpToplamKatkiInt = vizeKatkisiInt + projeKatkisiInt;
+    
+    const finaldenGerekenInt = hedefToplamPuan - vpToplamKatkiInt;
+    const rawFinalNotu = finaldenGerekenInt / finalAgirlik;
+    const finalNotuIhtiyaci = Math.ceil(rawFinalNotu);
 
-            document.getElementById("gosterilenHedefPuan-proje-fi").textContent = hedefToplamPuan;
-            document.getElementById("vpKatkisi-proje-fi-int").textContent = vpToplamKatkiInt;
-            
-            if (finalNotuIhtiyaci > 100) {
-                 finalScoreElement.textContent = "MÜMKÜN DEĞİL!";
-                 finalScoreElement.classList.add('fail-color');
-                 uyariElementi.textContent = `* Gerekli final notu (${finalNotuIhtiyaci}) 100'ün üzerindedir. Bu hedefe ulaşmanız imkansız.`;
-                 uyariElementi.style.display = 'block';
-            } else if (finalNotuIhtiyaci <= 0) {
-                finalScoreElement.textContent = "0";
-                finalScoreElement.classList.add('pass-color');
-                uyariElementi.textContent = "TEBRİKLER! Finalden 0 almanız bile bu hedefe ulaşmanız için yeterli!";
-                uyariElementi.style.display = 'block';
-            }
-            else {
-                finalScoreElement.textContent = finalNotuIhtiyaci;
-                finalScoreElement.classList.add('accent-color');
-            }
-            
-            setTimeout(() => {
-                resultBox.classList.add('show');
-            }, 10);
-        }
+    document.getElementById("gosterilenHedefPuan-proje-fi").textContent = hedefToplamPuan;
+    document.getElementById("vpKatkisi-proje-fi-int").textContent = vpToplamKatkiInt;
+    
+    const sartliToggle = document.querySelector('.sartli-toggle');
+    const sartliAktif = sartliToggle ? sartliToggle.checked : false;
+    const sartliSinirInput = document.querySelector('.sartli-sinir-input');
+    const sartliSinir = sartliSinirInput ? parseInt(sartliSinirInput.value) : 50;
+
+    if (sartliAktif) {
+        const finaldenSartliGereken = sartliSinir - vpToplamKatkiInt;
+        let sartliIhtiyac = Math.ceil(finaldenSartliGereken / finalAgirlik);
+        sartliIhtiyac = sartliIhtiyac > 0 ? (sartliIhtiyac > 100 ? "X" : sartliIhtiyac) : 0;
+
+        finalScoreElement.innerHTML = `
+            <div class="score-item">
+                <span class="label">HEDEF (${hedefToplamPuan}) İÇİN</span>
+                <span class="value">${finalNotuIhtiyaci > 100 ? 'X' : (finalNotuIhtiyaci < 0 ? 0 : finalNotuIhtiyaci)}</span>
+            </div>
+            <div class="score-item sartli">
+                <span class="label">ŞARTLI (${sartliSinir}) İÇİN</span>
+                <span class="value">${sartliIhtiyac}</span>
+            </div>
+        `;
+    } else {
+        const gosterilecekNot = finalNotuIhtiyaci > 100 ? "İMKANSIZ" : (finalNotuIhtiyaci <= 0 ? "0" : finalNotuIhtiyaci);
+        finalScoreElement.innerHTML = `
+            <div class="score-item">
+                <span class="label">GEREKEN FİNAL NOTU</span>
+                <span class="value">${gosterilecekNot}</span>
+            </div>
+        `;
+    }
+
+    if (finalNotuIhtiyaci > 100) {
+        uyariElementi.textContent = `* Gerekli final notu (${finalNotuIhtiyaci}) 100'ün üzerindedir. Bu hedefe ulaşmanız imkansız.`;
+        uyariElementi.style.display = 'block';
+    }
+
+    setTimeout(() => { resultBox.classList.add('show'); }, 10);
+}
+
 
         /* ======================================= */
         /* POPUP (REKLAM) */
@@ -1228,34 +1381,128 @@ document.querySelectorAll('input').forEach(input => {
     });
 });
 
-function prepareForVault(btn) {
-    const parent = btn.closest('.result-box');
-    const isProje = parent.id.includes('proje');
-    let data = "";
-
-    if (!isProje) {
-        const vize = document.getElementById("vize-fi").value;
-        const vAg = document.getElementById("vize-agirlik-fi").value; // Vize %
-        const fAg = document.getElementById("final-agirlik-fi").value; // Final %
-        const hedef = document.getElementById("hedefPuan-fi").value;
-        const gereken = document.getElementById("finalIhtiyaci-fi").textContent;
-        data = `T:NORM|V:${vize}|VA:${vAg}|FA:${fAg}|H:${hedef}|G:${gereken}`;
+// 1. Ayarları Tarayıcıda Hatırlama ve Panel Kontrolü
+function toggleSartliPanel() {
+    const panel = document.getElementById('sartli-panel');
+    const icon = document.getElementById('sartli-icon');
+    if (panel.style.display === "none") {
+        panel.style.display = "block";
+        icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
     } else {
-        const vize = document.getElementById("vize-proje-fi").value;
-        const proje = document.getElementById("proje-proje-fi").value;
-        const vAg = document.getElementById("vize-agirlik-proje-fi").value; // Vize %
-        const pAg = document.getElementById("proje-agirlik-proje-fi").value; // Proje %
-        const fAg = document.getElementById("final-agirlik-proje-fi").value; // Final %
-        const hedef = document.getElementById("hedefPuan-proje-fi").value;
-        const gereken = document.getElementById("finalIhtiyaci-proje-fi").textContent;
-        data = `T:PROJ|V:${vize}|P:${proje}|VA:${vAg}|PA:${pAg}|FA:${fAg}|H:${hedef}|G:${gereken}`;
+        panel.style.display = "none";
+        icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
     }
-
-    navigator.clipboard.writeText(data).then(() => {
-        alert("Hedef ve ağırlıklar kopyalandı! Notlarım sayfasına yönlendiriliyorsunuz.");
-        window.location.href = "not-defteri.html"; 
-    });
 }
+
+function saveSartliPrefs() {
+    const prefs = {
+        gecme: document.getElementById('gecme-siniri').value,
+        sartli: document.getElementById('sartli-siniri').value
+    };
+    localStorage.setItem('sartliSettings', JSON.stringify(prefs));
+    // Notmatik hesaplamasını tetiklemek için mevcut fonksiyonunu çağırabilirsin (örn: calculateNormal())
+}
+
+// Sayfa yüklendiğinde ayarları geri yükle
+document.addEventListener('DOMContentLoaded', () => {
+    const saved = JSON.parse(localStorage.getItem('sartliSettings'));
+    if (saved) {
+        document.getElementById('gecme-siniri').value = saved.gecme;
+        document.getElementById('sartli-siniri').value = saved.sartli;
+    }
+});
+
+
+function prepareForVault(btn) {
+    try {
+        const parent = btn.closest('.result-box');
+        const isProje = parent.id.includes('proje');
+        const idSuffix = isProje ? "-proje-fi" : "-fi";
+
+        // Temel Veriler
+        const vize = document.getElementById("vize" + idSuffix).value;
+        const vAg = document.getElementById("vize-agirlik" + idSuffix).value;
+        const fAg = document.getElementById("final-agirlik" + idSuffix).value;
+        const hedef = document.getElementById("hedefPuan" + idSuffix).value;
+        
+        // Proje Verileri (Sadece Proje Modu Aktifse)
+        let pNot = "";
+        let pAg = "";
+        if(isProje) {
+            pNot = document.getElementById("proje-proje-fi").value;
+            pAg = document.getElementById("proje-agirlik-proje-fi").value;
+        }
+        
+        const sToggle = document.querySelector('.sartli-toggle');
+        const sMod = (sToggle && sToggle.checked) ? 'AKTIF' : 'PASIF';
+        const sInput = document.querySelector('.sartli-sinir-input');
+        const sAlt = sInput ? sInput.value : "50";
+
+        const scoreItems = parent.querySelectorAll('.score-item .value');
+        let gerekenHedef = scoreItems[0] ? scoreItems[0].innerText.trim() : "-";
+        let gerekenSartli = (sMod === 'AKTIF' && scoreItems[1]) ? scoreItems[1].innerText.trim() : "";
+
+        // VERİ DİZGİSİ (P ve PA eklendi)
+        const data = `T:${isProje ? 'PROJ' : 'NORM'}|V:${vize}|VA:${vAg}|P:${pNot}|PA:${pAg}|FA:${fAg}|H:${hedef}|GH:${gerekenHedef}|GS:${gerekenSartli}|SALT:${sAlt}`;
+
+        navigator.clipboard.writeText(data).then(() => {
+            alert("Hedef verileri başarıyla kopyalandı!\nNotlarım sayfasına yönlendiriliyorsunuz.");
+            window.location.href = "not-defteri.html"; 
+        });
+    } catch (err) {
+        console.error("Kayıt hatası:", err);
+        alert("Kayıt sırasında bir hata oluştu.");
+    }
+}
+
+
+// Şartlı geçme arayüzünü aç/kapat ve tercihi kaydet
+function toggleSartliUI(event) {
+    if (!event) return;
+    
+    const newState = event.target.checked;
+    const toggles = document.querySelectorAll('.sartli-toggle');
+    const inputAreas = document.querySelectorAll('.sartli-input-area');
+    
+    toggles.forEach(t => t.checked = newState);
+    inputAreas.forEach(area => {
+        area.style.display = newState ? 'block' : 'none';
+    });
+    
+    localStorage.setItem('sartli_active', newState);
+}
+
+
+
+// Sayfa yüklenince hafızadan getir ve uygula
+document.addEventListener('DOMContentLoaded', () => {
+    const wasActive = localStorage.getItem('sartli_active') === 'true';
+    if (wasActive) {
+        document.querySelectorAll('.sartli-toggle').forEach(t => t.checked = true);
+        document.querySelectorAll('.sartli-input-area').forEach(area => area.style.display = 'block');
+    }
+});
+
+
+// Sayfa yüklenince hafızadan getir ve uygula
+document.addEventListener('DOMContentLoaded', () => {
+    const wasActive = localStorage.getItem('sartli_active') === 'true';
+    if (wasActive) {
+        document.querySelectorAll('.sartli-toggle').forEach(t => t.checked = true);
+        document.querySelectorAll('.sartli-input-area').forEach(area => area.style.display = 'block');
+    }
+});
+
+
+// Sayfa yüklenince hafızadan getir
+document.addEventListener('DOMContentLoaded', () => {
+    const wasActive = localStorage.getItem('sartli_active') === 'true';
+    if (wasActive) {
+        document.getElementById('sartli-toggle').checked = true;
+        toggleSartliUI();
+    }
+});
+
     window.onload = checkAndShowModalWithTimer;
 
 
