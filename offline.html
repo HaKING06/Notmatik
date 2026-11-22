@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NOTMATİK | Çevrimdışı Mod</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+    <script>
+        (function () {
+            var m = localStorage.getItem('darkMode');
+            var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (m === 'enabled' || (m === null && p)) document.body.classList.add('dark-mode');
+        })();
+    </script>
+
+    <main style="max-width: 520px; width: 92%; margin: auto; padding: 36px 26px; background: var(--card-bg); border-radius: 20px; box-shadow: var(--box-shadow); text-align: center; border: 1px solid var(--border-color);">
+        <img src="assets/img/logo.png" alt="NOTMATİK Logo" width="84" height="84" style="border-radius: 20px; margin-bottom: 16px;">
+        <h1 style="margin: 0 0 10px; font-size: 1.6rem; font-weight: 900;">Şu An Çevrimdışısınız</h1>
+        <p style="color: var(--light-text); font-size: 0.94rem; margin: 0 0 22px;">İnternet bağlantınız kesilmiş görünüyor. Önbelleğe alınmış hesaplama aracına hemen geri dönebilirsiniz.</p>
+        <a href="index.html" class="calculate-btn" style="text-decoration: none;">Hesaplayıcıya Git</a>
+    </main>
+</body>
+</html>

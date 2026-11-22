@@ -2,309 +2,209 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTMATİK | Hedef Defterim</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-bg: #8a0303;
-            --nav-text: #ffffff;
-            --accent: #ef233c;
-            --bg: #f4f4f9;
-            --card: #ffffff;
-            --text: #0b090a;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NOTMATİK | Hedef Defterim ve Kayıtlı Dersler</title>
+    <meta name="description" content="NOTMATİK Hedef Defterim ile vize, proje ve hedef final notlarınızı cihazınızda güvenle saklayın, takip edin ve yönetin.">
+    <meta name="author" content="halitguns06.dev">
+    <meta name="robots" content="index, follow">
 
-        body.dark-mode {
-            --primary-bg: #0b090a;
-            --nav-text: #ef233c;
-            --bg: #111111;
-            --card: #161a1d;
-            --text: #f8f9fa;
-            --shadow: 0 10px 30px rgba(0,0,0,0.6);
-        }
+    <link rel="canonical" href="https://notmatik.haking.tr/not-defteri.html">
+    <link rel="alternate" hreflang="tr" href="https://notmatik.haking.tr/not-defteri.html">
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            transition: all 0.3s ease;
-        }
+    <!-- PWA ve Mobil Uygulama Ayarları -->
+    <meta name="theme-color" content="#8a0303" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0b090a" media="(prefers-color-scheme: dark)">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="NOTMATİK">
+    <link rel="manifest" href="manifest.webmanifest">
 
-        nav {
-            background: var(--primary-bg);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    <!-- PNG ve ICO İkonlar -->
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
 
-        .nav-logo { color: var(--nav-text); font-weight: 900; font-size: 1.5em; text-decoration: none; }
-        .nav-logo i { color: var(--accent); }
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:site_name" content="NOTMATİK">
+    <meta property="og:title" content="NOTMATİK | Hedef Defterim">
+    <meta property="og:description" content="Ders hedeflerinizi ve gereken final notlarınızı kolayca kaydedip takip edin.">
+    <meta property="og:url" content="https://notmatik.haking.tr/not-defteri.html">
+    <meta property="og:image" content="https://notmatik.haking.tr/assets/img/og-image.png">
 
-        .btn-back { 
-            color: white; 
-            border: 2px solid rgba(255,255,255,0.2); 
-            padding: 8px 18px; 
-            border-radius: 30px; 
-            text-decoration: none; 
-            font-size: 0.9em; 
-            font-weight: 700;
-            transition: 0.3s;
-        }
-        
-        .btn-back:hover {
-            background: rgba(255,255,255,0.1);
-        }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        /* Yeni Akıllı Panel */
-        .smart-action-area {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 40px;
-            background: var(--card);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            border: 2px dashed var(--accent);
-        }
-
-        .smart-action-area h2 { margin-top: 0; font-weight: 900; font-size: 2em; }
-        .smart-action-area p { opacity: 0.7; font-size: 0.9em; margin-bottom: 25px; font-weight: 600; }
-
-        .btn-smart-paste {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 18px 35px;
-            border-radius: 50px;
-            font-weight: 900;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 20px rgba(239, 35, 60, 0.3);
-        }
-
-        .btn-smart-paste:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(239, 35, 60, 0.4);
-            background: #d90429;
-        }
-
-        .course-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-        }
-
-        .course-card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            position: relative;
-            border-top: 6px solid var(--accent);
-            width: 100%;
-            max-width: 350px;
-            transition: 0.3s;
-            animation: slideUp 0.4s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .course-card h3 { margin: 0 0 15px 0; color: var(--text); font-size: 1.2em; border-bottom: 2px solid var(--bg); padding-bottom: 10px; font-weight: 900; }
-
-        .grid-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .info-item label { display: block; font-size: 0.65em; color: #888; font-weight: 700; text-transform: uppercase; }
-        .info-item span { font-weight: 700; font-size: 1.05em; }
-
-        .target-box { background: var(--bg); padding: 15px; border-radius: 12px; text-align: center; border: 1px dashed rgba(239, 35, 60, 0.3); }
-        .target-box label { display: block; font-size: 0.7em; font-weight: 600; opacity: 0.6; }
-        .target-box b { font-size: 2em; color: var(--accent); display: block; margin-top: 5px; }
-
-        .delete-btn { position: absolute; top: 15px; right: 15px; color: #ff5252; cursor: pointer; opacity: 0.3; transition: 0.3s; font-size: 1.2em; }
-        .delete-btn:hover { opacity: 1; transform: scale(1.1); }
-
-        .empty-state { text-align: center; padding: 60px 0; width: 100%; opacity: 0.4; font-weight: 700; }
-
-        /* Footer */
-        footer {
-            background-color: #0b090a; color: #b0c2e3; padding: 25px 0; width: 100%;
-            text-align: center; font-size: 0.85em; flex-shrink: 0; margin-top: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/notebook.css">
 </head>
 <body>
+    <script>
+        (function () {
+            var m = localStorage.getItem('darkMode');
+            var p = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (m === 'enabled' || (m === null && p)) document.body.classList.add('dark-mode');
+        })();
+    </script>
 
-<nav>
-    <a href="index.html" class="nav-logo">NOTMATİK <i class="fa-solid fa-graduation-cap"></i></a>
-    <a href="index.html" class="btn-back"><i class="fa-solid fa-calculator"></i> Hesaplayıcıya Dön</a>
-</nav>
-
-<div class="container">
-    <div class="smart-action-area">
-        <h2>Ders Not Defteri</h2>
-        <p>Hesapladığın veriyi kopyaladıysan aşağıdaki butona basman yeterli.</p>
-        <button class="btn-smart-paste" onclick="handleSmartPaste()">
-            <i class="fa-solid fa-file-import"></i> PANODAN YAPIŞTIR VE EKLE
-        </button>
-    </div>
-
-    <div id="courseList" class="course-grid">
-        </div>
-</div>
-
-    <footer>
-        <p>&copy; 2025 NOTMATİK. Tüm Hakları Saklıdır.</p>
-        <p><b>halitguns06.dev</b> | Versiyon: 2.0</p>
-    </footer>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Otomatik Dark Mode Tespiti
-        const savedMode = localStorage.getItem('darkMode');
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        if (savedMode === 'enabled' || (savedMode === null && prefersDark)) {
-            document.body.classList.add('dark-mode');
-        }
-        loadCards();
-    });
-
-async function handleSmartPaste() {
-    try {
-        // 1. Panodaki metni oku
-        const text = await navigator.clipboard.readText();
-        
-        // 2. Format kontrolü
-        if (!text || !text.includes('|') || !text.startsWith('T:')) {
-            alert("Panoda geçerli bir Notmatik verisi bulunamadı!");
-            return;
-        }
-
-        // 3. Ders adını al
-        const dersAdi = prompt("Dersin Adını Giriniz:");
-        if (!dersAdi) return;
-
-        // 4. Veriyi kaydet
-        const newCourse = { id: Date.now(), name: dersAdi.toUpperCase(), data: text };
-        const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
-        courses.unshift(newCourse);
-        localStorage.setItem('savedGoals', JSON.stringify(courses));
-        
-        // 5. Kartları yenile
-        loadCards();
-
-        // 🔑 6. PANOYI TEMİZLE (İstediğin işlem burada yapılıyor)
-        await navigator.clipboard.writeText(""); 
-        
-        alert("Ders başarıyla kaydedildi!");
-        
-    } catch (err) {
-        alert("Pano erişim izni reddedildi.");
-    }
-}
-
-function loadCards() {
-    const list = document.getElementById('courseList');
-    const courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
-    
-    if (courses.length === 0) {
-        list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-clipboard-list fa-3x"></i><p>Henüz kayıtlı bir hedef bulunmuyor.</p></div>`;
-        return;
-    }
-
-    list.innerHTML = courses.map(course => {
-        const parts = {};
-        course.data.split('|').forEach(p => { 
-            const index = p.indexOf(':');
-            if (index !== -1) {
-                const k = p.substring(0, index);
-                const v = p.substring(index + 1);
-                parts[k] = v;
-            }
-        });
-
-        let displayNote = "";
-        if (parts.GS && parts.GS !== "") {
-            displayNote = `
-                <div style="margin-bottom:8px;">
-                    <span style="font-size: 0.75em; display:block; opacity:0.6; font-weight:800;">HEDEF İÇİN</span>
-                    <span style="color:var(--accent); font-size:1.8em; font-weight:900;">${parts.GH}</span>
-                </div>
-                <div style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top:8px;">
-                    <span style="font-size: 0.75em; display:block; opacity:0.6; font-weight:800; color:#f48c06;">ŞARTLI (${parts.SALT}) İÇİN</span>
-                    <span style="color:#f48c06; font-size:1.5em; font-weight:900;">${parts.GS}</span>
-                </div>
-            `;
-        } else {
-            displayNote = `
-                <span style="font-size: 0.75em; display:block; opacity:0.6; font-weight:800;">GEREKEN FİNAL NOTU</span>
-                <span style="color:var(--accent); font-size:2.5em; font-weight:900;">${parts.GH || '-'}</span>
-            `;
-        }
-
-        return `
-            <div class="course-card">
-                <i class="fa-solid fa-trash-can delete-btn" onclick="deleteItem(${course.id})"></i>
-                <h3 style="border-bottom: 2px solid var(--bg); padding-bottom:10px;">${course.name}</h3>
-                <div class="grid-info" style="display: flex; justify-content: space-around; padding: 10px 0; gap: 5px;">
-                    <div class="info-item" style="text-align:center;">
-                        <label style="display:block; font-size:0.6rem; color:#888; font-weight:800;">VİZE (%${parts.VA || '0'})</label>
-                        <span style="font-weight:900; font-size:1.1em;">${parts.V || '-'}</span>
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="header-top-bar">
+                <a href="index.html" class="brand-link">
+                    <img src="assets/img/logo.png" alt="NOTMATİK Logo" class="brand-logo-img" width="52" height="52">
+                    <div class="brand-text-group">
+                        <h1 class="brand-title">NOTMATİK</h1>
+                        <p class="brand-subtitle">Hedef Defterim</p>
                     </div>
-                    
-                    ${parts.P ? `
-                    <div class="info-item" style="text-align:center;">
-                        <label style="display:block; font-size:0.6rem; color:#888; font-weight:800;">PROJE (%${parts.PA})</label>
-                        <span style="font-weight:900; font-size:1.1em;">${parts.P}</span>
-                    </div>` : ''}
+                </a>
 
-                    <div class="info-item" style="text-align:center;">
-                        <label style="display:block; font-size:0.6rem; color:#888; font-weight:800;">HEDEF</label>
-                        <span style="font-weight:900; font-size:1.1em;">${parts.H || '-'}</span>
-                    </div>
-                </div>
-                <div class="target-box" style="background:var(--bg); padding:12px; border-radius:12px; text-align:center; margin-top:10px;">
-                    ${displayNote}
+                <div class="header-actions">
+                    <button type="button" id="install-app-btn" class="header-pill-btn primary-install" onclick="triggerInstallApp()">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <span>Uygulamayı İndir</span>
+                    </button>
+                    <a href="index.html" class="header-pill-btn">
+                        <i class="fa-solid fa-calculator"></i>
+                        <span>Hesaplayıcı</span>
+                    </a>
+                    <button type="button" class="theme-toggle-btn" onclick="toggleDarkMode()" aria-label="Karanlık / Aydınlık Modu Değiştir" title="Tema Değiştir">
+                        <i id="mode-icon" class="fa-solid fa-moon"></i>
+                    </button>
                 </div>
             </div>
-        `;
-    }).join('');
-}
+        </div>
+    </header>
 
+    <main class="notebook-container">
+        <section class="smart-action-area">
+            <h2>Ders Not Defteri</h2>
+            <p>Hesaplayıcıdan doğrudan kaydettiğiniz dersleri yönetin, panodan yapıştırın veya manuel hedef ekleyin.</p>
+            <div class="notebook-actions-row">
+                <button type="button" class="btn-smart-paste" onclick="handleSmartPaste()">
+                    <i class="fa-solid fa-paste"></i> PANODAN YAPIŞTIR VE EKLE
+                </button>
+                <button type="button" class="btn-outline-action" onclick="openManualAddModal()">
+                    <i class="fa-solid fa-plus"></i> MANUEL HEDEF EKLE
+                </button>
+                <button type="button" class="btn-outline-action danger" onclick="clearAllGoals()">
+                    <i class="fa-solid fa-trash-can"></i> TÜMÜNÜ TEMİZLE
+                </button>
+            </div>
+        </section>
 
-function deleteItem(id) {
-        if (confirm('Dersi silmek istediğine emin misin?')) {
-            let courses = JSON.parse(localStorage.getItem('savedGoals') || '[]');
-            courses = courses.filter(c => c.id !== id);
-            localStorage.setItem('savedGoals', JSON.stringify(courses));
-            loadCards();
-        }
-    }
-</script>
+        <div class="notebook-toolbar">
+            <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="course-search-input" placeholder="Ders adına göre ara..." oninput="filterCourses(this.value)">
+            </div>
+            <div class="goal-count-chip">
+                Kayıtlı Hedef: <strong id="goal-total-count">0</strong>
+            </div>
+        </div>
 
+        <section id="courseList" class="course-grid" aria-live="polite"></section>
+    </main>
+
+    <!-- PANODAN EKLENEN DERS ADI MODALI -->
+    <div id="paste-name-modal" class="app-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="paste-modal-title">
+        <div class="app-modal-dialog">
+            <button type="button" class="app-modal-close" onclick="closePasteNameModal()" aria-label="Kapat">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="paste-modal-title"><i class="fa-solid fa-paste" style="color: var(--accent-color);"></i> Ders Adı Belirle</h3>
+            <p>Panodan alınan hedef verisi için ders adını girin.</p>
+            <div class="input-group" style="margin-bottom: 0;">
+                <label for="paste-course-name-input">Ders Adı</label>
+                <input type="text" id="paste-course-name-input" placeholder="Örn: Fizik 102" maxlength="60">
+            </div>
+            <div class="app-modal-actions">
+                <button type="button" class="calculate-btn" style="margin-top: 0;" onclick="confirmPasteSave()">
+                    <i class="fa-solid fa-check"></i> Deftere Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANUEL HEDEF EKLEME MODALI -->
+    <div id="manual-goal-modal" class="app-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="manual-modal-title">
+        <div class="app-modal-dialog">
+            <button type="button" class="app-modal-close" onclick="closeManualAddModal()" aria-label="Kapat">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="manual-modal-title"><i class="fa-solid fa-plus" style="color: var(--accent-color);"></i> Manuel Ders Hedefi Ekle</h3>
+            <p>Vize notunuzu ve ağırlığını girerek hızlıca yeni bir hedef kartı oluşturun.</p>
+
+            <div class="input-group">
+                <label for="manual-course-name">Ders Adı</label>
+                <input type="text" id="manual-course-name" placeholder="Örn: Veri Yapıları" maxlength="60">
+            </div>
+            <div class="input-group">
+                <label for="manual-vize">Vize Notu (0-100)</label>
+                <input type="number" id="manual-vize" inputmode="decimal" min="0" max="100" placeholder="Örn: 55">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label for="manual-vize-agirlik">Vize Ağırlığı (%)</label>
+                    <input type="number" id="manual-vize-agirlik" inputmode="numeric" min="0" max="99" value="30">
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label for="manual-hedef">Hedef Ortalama</label>
+                    <input type="number" id="manual-hedef" inputmode="numeric" min="1" max="100" value="50">
+                </div>
+            </div>
+
+            <div class="app-modal-actions">
+                <button type="button" class="calculate-btn" style="margin-top: 0;" onclick="saveManualGoal()">
+                    <i class="fa-solid fa-bookmark"></i> Hedefi Oluştur
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UYGULAMA KURULUM REHBERİ MODALI -->
+    <div id="install-guide-modal" class="app-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="install-modal-title">
+        <div class="app-modal-dialog">
+            <button type="button" class="app-modal-close" onclick="closeInstallGuideModal()" aria-label="Kapat">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="install-modal-title"><i class="fa-solid fa-mobile-screen-button" style="color: var(--accent-color);"></i> NOTMATİK Uygulamasını İndir</h3>
+            <p>NOTMATİK'i ana ekranınıza ekleyerek mobil uygulama gibi açabilir ve internet bağlantınız olmadığında da kullanabilirsiniz.</p>
+
+            <ul id="install-steps-ios" class="install-steps-list" style="display: none;">
+                <li><span class="install-step-num">1</span><span>Safari tarayıcısının altındaki <strong>Paylaş</strong> <i class="fa-solid fa-arrow-up-from-bracket"></i> simgesine dokunun.</span></li>
+                <li><span class="install-step-num">2</span><span>Açılan menüde aşağı kaydırıp <strong>"Ana Ekrana Ekle"</strong> seçeneğine dokunun.</span></li>
+                <li><span class="install-step-num">3</span><span>Sağ üstten <strong>"Ekle"</strong> butonuna basın. Uygulamanız hazır!</span></li>
+            </ul>
+
+            <ul id="install-steps-generic" class="install-steps-list">
+                <li><span class="install-step-num">1</span><span>Tarayıcınızın adres çubuğundaki <strong>Yükle</strong> simgesine veya sağ üst menüye (<i class="fa-solid fa-ellipsis-vertical"></i>) tıklayın.</span></li>
+                <li><span class="install-step-num">2</span><span><strong>"Uygulamayı Yükle"</strong> veya <strong>"Ana Ekrana Ekle"</strong> seçeneğini seçin.</span></li>
+                <li><span class="install-step-num">3</span><span>Onayladığınızda NOTMATİK bağımsız bir uygulama olarak cihazınıza kurulacaktır.</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand-row">
+                <img src="assets/img/logo.png" alt="NOTMATİK" width="28" height="28">
+                <span>NOTMATİK</span>
+            </div>
+            <p style="margin: 0;">&copy; 2025&ndash;2026 NOTMATİK. Tüm Hakları Saklıdır. | Kuruluş: 2025</p>
+            <div class="footer-links">
+                <span><b>halitguns06.dev</b> | Versiyon: 3.0</span>
+                <a href="index.html"><i class="fa-solid fa-calculator"></i> Hesaplayıcı</a>
+                <a href="mailto:notmatik@haking.tr"><i class="fa-solid fa-envelope"></i> notmatik@haking.tr</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/notebook.js"></script>
 </body>
 </html>
