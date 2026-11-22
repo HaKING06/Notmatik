@@ -1,5 +1,5 @@
 /* =========================================================
-   NOTMATİK - Ortak Yardımcılar, Tema, Bildirim ve PWA Yönetimi
+   NOTMATİK - Ortak Yardımcılar, Tema, Bildirim ve Akıllı PWA Yönetimi
    ========================================================= */
 
 (function () {
@@ -109,9 +109,21 @@
         );
     }
 
-    function isIOSDevice() {
+    function detectPlatform() {
         const ua = window.navigator.userAgent || '';
-        return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/i.test(ua);
+        const isMobile = isIOS || isAndroid || /Mobile|Tablet/i.test(ua);
+        const isMac = !isIOS && /Mac/i.test(navigator.platform || ua);
+        const isOpera = /OPR|Opera/i.test(ua);
+        return {
+            isIOS: isIOS,
+            isAndroid: isAndroid,
+            isMobile: isMobile,
+            isDesktop: !isMobile,
+            isMac: isMac,
+            isOpera: isOpera
+        };
     }
 
     function shouldShowInstallBanner() {
@@ -126,6 +138,7 @@
     function updateInstallUI() {
         const headerBtn = document.getElementById('install-app-btn');
         const banner = document.getElementById('pwa-install-banner');
+        const platform = detectPlatform();
 
         if (isStandaloneApp()) {
             if (headerBtn) headerBtn.classList.add('is-installed');
@@ -135,12 +148,32 @@
 
         if (headerBtn) {
             headerBtn.classList.remove('is-installed');
+            const labelSpan = headerBtn.querySelector('span');
+            const iconEl = headerBtn.querySelector('i');
+            if (platform.isDesktop) {
+                if (labelSpan) labelSpan.textContent = "PC'ye İndir";
+                if (iconEl) iconEl.className = 'fa-solid fa-desktop';
+            } else {
+                if (labelSpan) labelSpan.textContent = "Telefona İndir";
+                if (iconEl) iconEl.className = 'fa-solid fa-mobile-screen-button';
+            }
+        }
+
+        const bannerTitle = document.getElementById('pwa-banner-title');
+        const bannerDesc = document.getElementById('pwa-banner-desc');
+        if (bannerTitle && bannerDesc) {
+            if (platform.isDesktop) {
+                bannerTitle.textContent = "NOTMATİK'i Bilgisayarına İndir";
+                bannerDesc.textContent = 'Masaüstü uygulaması olarak kur, internetsiz bile tek tıkla aç.';
+            } else {
+                bannerTitle.textContent = "NOTMATİK'i Telefonuna İndir";
+                bannerDesc.textContent = 'Ana ekrana ekle, internetsiz bile tek dokunuşla not hesapla.';
+            }
         }
 
         if (banner) {
             const canPrompt = Boolean(deferredInstallPrompt);
-            const mobileOrIos = isIOSDevice() || window.innerWidth <= 900;
-            if (shouldShowInstallBanner() && (canPrompt || mobileOrIos)) {
+            if (shouldShowInstallBanner() && (canPrompt || platform.isMobile)) {
                 banner.classList.add('visible');
             }
         }
@@ -150,13 +183,27 @@
         const modal = document.getElementById('install-guide-modal');
         if (!modal) return;
 
+        const platform = detectPlatform();
+        const titleEl = document.getElementById('install-modal-title');
+        const descEl = document.getElementById('install-modal-desc');
         const iosSteps = document.getElementById('install-steps-ios');
-        const genericSteps = document.getElementById('install-steps-generic');
-        if (iosSteps && genericSteps) {
-            const ios = isIOSDevice();
-            iosSteps.style.display = ios ? 'flex' : 'none';
-            genericSteps.style.display = ios ? 'none' : 'flex';
+        const androidSteps = document.getElementById('install-steps-android');
+        const desktopSteps = document.getElementById('install-steps-desktop');
+
+        if (titleEl && descEl) {
+            if (platform.isDesktop) {
+                titleEl.innerHTML = '<i class="fa-solid fa-desktop" style="color: var(--accent-color);"></i> NOTMATİK\'i PC\'ye İndir';
+                descEl.textContent = 'NOTMATİK\'i bilgisayarınıza masaüstü uygulaması olarak kurup tarayıcı sekmeleri olmadan, çevrimdışı da kullanabilirsiniz.';
+            } else {
+                titleEl.innerHTML = '<i class="fa-solid fa-mobile-screen-button" style="color: var(--accent-color);"></i> NOTMATİK\'i Telefona İndir';
+                descEl.textContent = 'NOTMATİK\'i ana ekranınıza ekleyerek mobil uygulama gibi açabilir ve internet bağlantınız olmadığında da kullanabilirsiniz.';
+            }
         }
+
+        if (iosSteps) iosSteps.style.display = platform.isIOS ? 'flex' : 'none';
+        if (androidSteps) androidSteps.style.display = (!platform.isIOS && platform.isMobile) ? 'flex' : 'none';
+        if (desktopSteps) desktopSteps.style.display = platform.isDesktop ? 'flex' : 'none';
+
         modal.classList.add('open');
     }
 
@@ -179,7 +226,7 @@
                 updateInstallUI();
                 return;
             } catch (err) {
-                // Fallback to visual guide modal
+                // Kurulum penceresi açılamazsa rehbere geç
             }
         }
         openInstallGuideModal();
@@ -194,7 +241,7 @@
     function registerServiceWorker() {
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
             navigator.serviceWorker.register('sw.js').catch(function () {
-                // Service worker registration skipped or unavailable
+                // Service worker kaydı atlandı
             });
         }
     }
@@ -238,6 +285,7 @@
         setSavedGoals: setSavedGoals,
         updateSavedGoalsBadge: updateSavedGoalsBadge,
         showToast: showToast,
+        detectPlatform: detectPlatform,
         triggerInstallApp: triggerInstallApp,
         dismissInstallBanner: dismissInstallBanner,
         closeInstallGuideModal: closeInstallGuideModal

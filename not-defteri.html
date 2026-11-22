@@ -2,16 +2,23 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="tr">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>NOTMATİK | Hedef Defterim ve Kayıtlı Dersler</title>
-    <meta name="description" content="NOTMATİK Hedef Defterim ile vize, proje ve hedef final notlarınızı cihazınızda güvenle saklayın, takip edin ve yönetin.">
+    <title>NOTMATİK — Hedef Defterim | Kayıtlı Ders Notları</title>
+    <meta name="description" content="NOTMATİK Hedef Defterim ile vize, proje ve gereken final notu hedeflerinizi cihazınızda güvenle saklayın, arayın ve yönetin.">
+    <meta name="keywords" content="notmatik, hedef defterim, kayıtlı ders notları, final hedefi takip, üniversite not defteri">
     <meta name="author" content="halitguns06.dev">
-    <meta name="robots" content="index, follow">
+    <meta name="application-name" content="NOTMATİK">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="yandex" content="index, follow">
 
     <link rel="canonical" href="https://notmatik.haking.tr/not-defteri.html">
-    <link rel="alternate" hreflang="tr" href="https://notmatik.haking.tr/not-defteri.html">
+    <link rel="alternate" hreflang="tr-TR" href="https://notmatik.haking.tr/not-defteri.html">
+    <link rel="search" type="application/opensearchdescription+xml" title="NOTMATİK" href="opensearch.xml">
 
-    <!-- PWA ve Mobil Uygulama Ayarları -->
+    <!-- PWA ve Mobil / Masaüstü Uygulama Ayarları -->
     <meta name="theme-color" content="#8a0303" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0b090a" media="(prefers-color-scheme: dark)">
     <meta name="mobile-web-app-capable" content="yes">
@@ -30,7 +37,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="tr_TR">
     <meta property="og:site_name" content="NOTMATİK">
-    <meta property="og:title" content="NOTMATİK | Hedef Defterim">
+    <meta property="og:title" content="NOTMATİK — Hedef Defterim">
     <meta property="og:description" content="Ders hedeflerinizi ve gereken final notlarınızı kolayca kaydedip takip edin.">
     <meta property="og:url" content="https://notmatik.haking.tr/not-defteri.html">
     <meta property="og:image" content="https://notmatik.haking.tr/assets/img/og-image.png">
@@ -65,8 +72,8 @@
 
                 <div class="header-actions">
                     <button type="button" id="install-app-btn" class="header-pill-btn primary-install" onclick="triggerInstallApp()">
-                        <i class="fa-solid fa-mobile-screen-button"></i>
-                        <span>Uygulamayı İndir</span>
+                        <i class="fa-solid fa-desktop"></i>
+                        <span>PC'ye İndir</span>
                     </button>
                     <a href="index.html" class="header-pill-btn">
                         <i class="fa-solid fa-calculator"></i>
@@ -172,8 +179,8 @@
             <button type="button" class="app-modal-close" onclick="closeInstallGuideModal()" aria-label="Kapat">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <h3 id="install-modal-title"><i class="fa-solid fa-mobile-screen-button" style="color: var(--accent-color);"></i> NOTMATİK Uygulamasını İndir</h3>
-            <p>NOTMATİK'i ana ekranınıza ekleyerek mobil uygulama gibi açabilir ve internet bağlantınız olmadığında da kullanabilirsiniz.</p>
+            <h3 id="install-modal-title"><i class="fa-solid fa-desktop" style="color: var(--accent-color);"></i> NOTMATİK'i İndir</h3>
+            <p id="install-modal-desc">NOTMATİK'i cihazınıza kurarak çevrimdışı da kullanabilirsiniz.</p>
 
             <ul id="install-steps-ios" class="install-steps-list" style="display: none;">
                 <li><span class="install-step-num">1</span><span>Safari tarayıcısının altındaki <strong>Paylaş</strong> <i class="fa-solid fa-arrow-up-from-bracket"></i> simgesine dokunun.</span></li>
@@ -181,10 +188,16 @@
                 <li><span class="install-step-num">3</span><span>Sağ üstten <strong>"Ekle"</strong> butonuna basın. Uygulamanız hazır!</span></li>
             </ul>
 
-            <ul id="install-steps-generic" class="install-steps-list">
-                <li><span class="install-step-num">1</span><span>Tarayıcınızın adres çubuğundaki <strong>Yükle</strong> simgesine veya sağ üst menüye (<i class="fa-solid fa-ellipsis-vertical"></i>) tıklayın.</span></li>
-                <li><span class="install-step-num">2</span><span><strong>"Uygulamayı Yükle"</strong> veya <strong>"Ana Ekrana Ekle"</strong> seçeneğini seçin.</span></li>
-                <li><span class="install-step-num">3</span><span>Onayladığınızda NOTMATİK bağımsız bir uygulama olarak cihazınıza kurulacaktır.</span></li>
+            <ul id="install-steps-android" class="install-steps-list" style="display: none;">
+                <li><span class="install-step-num">1</span><span>Tarayıcınızın sağ üst köşesindeki menü (<i class="fa-solid fa-ellipsis-vertical"></i>) simgesine dokunun.</span></li>
+                <li><span class="install-step-num">2</span><span><strong>"Uygulamayı Yükle"</strong> veya <strong>"Ana Ekrana Ekle"</strong> seçeneğine dokunun.</span></li>
+                <li><span class="install-step-num">3</span><span>Onayladığınızda NOTMATİK telefonunuza uygulama olarak kurulacaktır.</span></li>
+            </ul>
+
+            <ul id="install-steps-desktop" class="install-steps-list">
+                <li><span class="install-step-num">1</span><span>Chrome, Edge veya Opera'da adres çubuğunun sağındaki <strong>Yükle</strong> simgesine (veya sağ üst menüye) tıklayın.</span></li>
+                <li><span class="install-step-num">2</span><span><strong>"NOTMATİK uygulamasını yükle"</strong> / <strong>"Bu siteyi uygulama olarak yükle"</strong> seçeneğini seçin.</span></li>
+                <li><span class="install-step-num">3</span><span>Masaüstünde ve Başlat menüsünde bağımsız uygulama olarak kullanıma hazır!</span></li>
             </ul>
         </div>
     </div>
@@ -195,7 +208,7 @@
                 <img src="assets/img/logo.png" alt="NOTMATİK" width="28" height="28">
                 <span>NOTMATİK</span>
             </div>
-            <p style="margin: 0;">&copy; 2025&ndash;2026 NOTMATİK. Tüm Hakları Saklıdır. | Kuruluş: 2025</p>
+            <p style="margin: 0;">&copy; 2025&ndash;2026 NOTMATİK. Tüm Hakları Saklıdır.</p>
             <div class="footer-links">
                 <span><b>halitguns06.dev</b> | Versiyon: 3.0</span>
                 <a href="index.html"><i class="fa-solid fa-calculator"></i> Hesaplayıcı</a>

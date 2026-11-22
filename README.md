@@ -20,7 +20,7 @@ Hesaplamalar üniversitelerde yaygın olarak kullanılan **Tam Sayı Katkısı**
 
 ## Özellikler
 
-- **Vize - Final Hesaplama**: Varsayılan olarak **%30 Vize / %70 Final** oranıyla açılır; dilediğiniz oranı girebilir veya tek dokunuşlu hızlı oran çiplerini kullanabilirsiniz.
+- **Vize - Final Hesaplama**: Varsayılan olarak **%30 Vize / %70 Final** oranıyla açılır; dilediğiniz oranı girebilirsiniz.
 - **Proje Dahil Hesaplama**: Vize, Proje ve Final ağırlıklarıyla (varsayılan `%30 / %20 / %50`) başarı puanı ve gereken final notu hesabı.
 - **Akıllı Ayar Hafızası & Senkronizasyon**:
   - Değiştirdiğiniz ağırlık oranları, özel geçme notu ve şartlı geçiş ayarları tarayıcıda (`localStorage`) otomatik saklanır.
@@ -28,7 +28,7 @@ Hesaplamalar üniversitelerde yaygın olarak kullanılan **Tam Sayı Katkısı**
   - Standart değerlerin dışındaki geçme notları için **Özel Not** girişi desteklenir ve hatırlanır.
 - **Hedef Defterim (`not-defteri.html`)**: Hesapladığınız final hedeflerini tek tıkla kaydedin, arayın, manuel ekleyin veya panodan yapıştırın.
 - **Şartlı Geçiş Desteği**: Hedef notun yanında şartlı geçiş alt sınırı için gereken minimum final notunu paralel olarak hesaplar.
-- **Kurulabilir Mobil & Masaüstü Uygulama (PWA)**: Telefon veya bilgisayarınıza yükleyip çevrimdışı (internetsiz) kullanabilirsiniz.
+- **Akıllı PWA Kurulumu (PC & Mobil)**: Masaüstünde **"PC'ye İndir"**, telefonda **"Telefona İndir"** deneyimi sunar; çevrimdışı (internetsiz) çalışır.
 - **Karanlık & Aydınlık Tema**: Sistem temasını algılar ve tercihinizi kaydeder.
 
 ---
@@ -41,6 +41,7 @@ Notmatik/
 ├── not-defteri.html           # Kayıtlı hedefler (Hedef Defterim)
 ├── offline.html               # Çevrimdışı PWA yedek sayfası
 ├── manifest.webmanifest       # PWA uygulama bildirimi
+├── opensearch.xml             # Tarayıcı / arama motoru tanımlayıcısı
 ├── sw.js                      # Service Worker (çevrimdışı önbellekleme)
 ├── robots.txt                 # Arama motoru tarama kuralları
 ├── sitemap.xml                # SEO site haritası

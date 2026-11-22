@@ -17,21 +17,21 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 15px 26px;
+    padding: 14px 26px;
     font-weight: 800;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.78);
     border: none;
     background: rgba(255, 255, 255, 0.08);
     border-top-left-radius: 14px;
     border-top-right-radius: 14px;
-    font-size: 1rem;
+    font-size: 0.98rem;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.22s ease;
 }
 
 .main-nav-tab:hover {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.16);
 }
 
 .main-nav-tab.active {
@@ -48,7 +48,7 @@
     width: 100%;
     max-width: 1580px;
     padding: 0 12px;
-    margin: 24px auto 40px;
+    margin: 22px auto 36px;
     gap: 18px;
 }
 
@@ -88,10 +88,10 @@
 /* Hesaplayıcı Merkez Kartı */
 .calculator-shell {
     width: 100%;
-    max-width: 880px;
+    max-width: 860px;
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 20px;
 }
 
 .container {
@@ -100,7 +100,7 @@
     border: 1px solid var(--border-color);
     transition: background-color var(--transition-speed);
     width: 100%;
-    padding: 36px 40px;
+    padding: 32px 36px;
     border-radius: var(--border-radius);
 }
 
@@ -109,7 +109,7 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 26px;
+    margin-bottom: 24px;
     padding: 6px;
     background: var(--weight-bg);
     border-radius: 14px;
@@ -124,13 +124,13 @@
     gap: 8px;
     padding: 12px 16px;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.94rem;
     color: var(--light-text);
     background: transparent;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.22s ease;
 }
 
 .sub-nav-tab:hover {
@@ -151,120 +151,21 @@
 .calculator-content.active,
 .sub-calculator-content.active {
     display: block;
-    animation: slideIn 0.35s ease-out;
+    animation: slideIn 0.3s ease-out;
 }
 
 @keyframes slideIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
-}
-
-.section-header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
 }
 
 .container h2 {
     font-weight: 800;
     color: var(--text-color);
-    margin: 0;
-    font-size: 1.45rem;
+    margin: 0 0 20px;
+    font-size: 1.4rem;
     border-left: 5px solid var(--accent-color);
     padding-left: 14px;
-}
-
-.reset-prefs-btn {
-    background: var(--weight-bg);
-    color: var(--text-color);
-    border: 1px solid var(--dashed-border);
-    padding: 8px 13px;
-    border-radius: 10px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s ease;
-}
-
-.reset-prefs-btn:hover {
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-}
-
-/* Akıllı Ayar Durum Şeridi */
-.smart-sync-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 10px 14px;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    background: var(--weight-bg);
-    border: 1px solid var(--border-color);
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--light-text);
-}
-
-.smart-sync-bar strong {
-    color: var(--text-color);
-    font-weight: 800;
-}
-
-.smart-sync-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--success-color);
-    font-weight: 700;
-}
-
-/* Hızlı Ağırlık Seçim Çipleri */
-.preset-chips-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.preset-label {
-    font-size: 0.74rem;
-    font-weight: 800;
-    color: var(--light-text);
-    text-transform: uppercase;
-    margin-right: 2px;
-}
-
-.preset-chip {
-    border: 1px solid var(--dashed-border);
-    background: var(--card-bg);
-    color: var(--text-color);
-    border-radius: 999px;
-    padding: 6px 11px;
-    font-size: 0.74rem;
-    font-weight: 700;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.preset-chip:hover {
-    border-color: var(--accent-color);
-}
-
-.preset-chip.active {
-    background: var(--accent-color);
-    color: #ffffff;
-    border-color: var(--accent-color);
 }
 
 /* Özel Geçme Notu / Hedef Ortalama Girişi */
@@ -292,7 +193,7 @@
     background-color: var(--weight-bg);
     padding: 18px;
     border-radius: 14px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     border: 1px dashed var(--dashed-border);
 }
 
@@ -326,8 +227,8 @@
 
 /* Şartlı Geçiş Kutusu */
 .sartli-control-wrapper {
-    margin: 20px 0 8px;
-    padding: 15px 16px;
+    margin: 18px 0 6px;
+    padding: 14px 16px;
     background: var(--weight-bg);
     border-radius: 14px;
     border: 1px dashed var(--dashed-border);
@@ -400,9 +301,9 @@
     display: none;
     background-color: var(--weight-bg);
     border: 2px solid var(--success-color);
-    padding: 26px;
+    padding: 24px;
     border-radius: var(--border-radius);
-    margin-top: 26px;
+    margin-top: 24px;
     position: relative;
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
@@ -488,7 +389,7 @@
 }
 
 .result-status-summary {
-    margin-top: 18px;
+    margin-top: 16px;
     font-weight: 800;
     color: var(--text-color);
     text-align: center;
@@ -513,7 +414,7 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     text-align: center;
 }
 
@@ -547,7 +448,7 @@
 }
 
 .final-ihtiyaci-label {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--text-color);
     font-weight: 800;
     margin: 0 0 14px;
@@ -602,66 +503,180 @@
 }
 
 .save-goal-btn {
-    margin-top: 18px;
+    margin-top: 16px;
     width: 100%;
 }
 
 /* =========================================================
-   BİLGİLENDİRME VE SSS BÖLÜMÜ (SEO & KULLANICI REHBERİ)
+   AÇILIR KAPANIR BİLGİLENDİRME VE İŞ BİRLİĞİ PANELİ
    ========================================================= */
 
-.info-section-card {
+.info-accordion {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    padding: 30px 34px;
     box-shadow: var(--box-shadow);
+    overflow: hidden;
 }
 
-.info-section-card h2 {
-    margin: 0 0 14px;
-    font-size: 1.3rem;
+.info-accordion-trigger {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.info-accordion-trigger::-webkit-details-marker {
+    display: none;
+}
+
+.info-accordion-trigger:hover {
+    background: var(--weight-bg);
+}
+
+.info-trigger-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.info-trigger-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--weight-bg);
+    color: var(--accent-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+
+.info-trigger-text h2 {
+    margin: 0;
+    font-size: 1.04rem;
     font-weight: 800;
-    border-left: 5px solid var(--accent-color);
-    padding-left: 12px;
+    color: var(--text-color);
 }
 
-.info-section-card p {
+.info-trigger-text span {
+    display: block;
+    font-size: 0.8rem;
     color: var(--light-text);
-    font-size: 0.93rem;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.info-trigger-chevron {
+    color: var(--accent-color);
+    font-size: 1rem;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.info-accordion[open] .info-trigger-chevron {
+    transform: rotate(180deg);
+}
+
+.info-accordion-body {
+    padding: 6px 24px 26px;
+    border-top: 1px solid var(--border-color);
+    animation: slideIn 0.25s ease-out;
+}
+
+.info-accordion-body > p {
+    color: var(--light-text);
+    font-size: 0.91rem;
     font-weight: 500;
-    margin: 0 0 14px;
+    margin: 16px 0 18px;
 }
 
 .info-highlights-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    margin: 18px 0 22px;
+    gap: 12px;
+    margin-bottom: 18px;
 }
 
 .highlight-box {
     background: var(--weight-bg);
     border-radius: 12px;
-    padding: 16px;
+    padding: 15px;
     border: 1px solid var(--border-color);
 }
 
 .highlight-box i {
     color: var(--accent-color);
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     margin-bottom: 8px;
 }
 
 .highlight-box h3 {
     margin: 0 0 6px;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 800;
 }
 
 .highlight-box p {
     margin: 0;
+    font-size: 0.82rem;
+    color: var(--light-text);
+    font-weight: 500;
+}
+
+.collab-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: var(--weight-bg);
+    border: 1px dashed var(--dashed-border);
+    margin-bottom: 18px;
+}
+
+.collab-banner-info strong {
+    display: block;
+    font-size: 0.94rem;
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+.collab-banner-info span {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--light-text);
+    font-weight: 500;
+    margin-top: 3px;
+}
+
+.collab-mail-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: var(--accent-color);
+    color: #ffffff;
+    text-decoration: none;
     font-size: 0.84rem;
+    font-weight: 800;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.collab-mail-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
 }
 
 .faq-list {
@@ -678,9 +693,9 @@
 }
 
 .faq-item summary {
-    padding: 14px 16px;
+    padding: 13px 16px;
     font-weight: 700;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     cursor: pointer;
     list-style: none;
     display: flex;
@@ -706,7 +721,7 @@
 
 .faq-item .faq-answer {
     padding: 0 16px 14px;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     color: var(--light-text);
     font-weight: 500;
 }
@@ -853,20 +868,24 @@
 
     .main-nav-tab {
         flex: 1;
-        padding: 13px 10px;
+        padding: 12px 10px;
         font-size: 0.9rem;
     }
 
     .container {
-        padding: 24px 16px;
+        padding: 22px 16px;
     }
 
     .container h2 {
-        font-size: 1.22rem;
+        font-size: 1.2rem;
     }
 
-    .info-section-card {
-        padding: 22px 16px;
+    .info-accordion-trigger {
+        padding: 16px;
+    }
+
+    .info-accordion-body {
+        padding: 4px 16px 20px;
     }
 
     .info-highlights-grid {

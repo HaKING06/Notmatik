@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>NOTMATİK</ShortName>
+  <Description>NOTMATİK — Üniversite vize, final, proje not hesaplama ve gerekli final notu hesaplama platformu.</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Image width="32" height="32" type="image/png">https://notmatik.haking.tr/assets/img/favicon-32.png</Image>
+  <Image width="192" height="192" type="image/png">https://notmatik.haking.tr/assets/img/icon-192.png</Image>
+  <Url type="text/html" method="get" template="https://notmatik.haking.tr/?tab={searchTerms}" />
+</OpenSearchDescription>

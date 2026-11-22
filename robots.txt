@@ -1,4 +1,20 @@
 User-agent: *
 Allow: /
 
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+Host: https://notmatik.haking.tr
 Sitemap: https://notmatik.haking.tr/sitemap.xml

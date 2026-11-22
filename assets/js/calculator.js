@@ -49,16 +49,21 @@
             const saved = raw ? JSON.parse(raw) : {};
             const merged = Object.assign({}, DEFAULT_PREFS, saved);
 
-            // Eski sürümdeki şartlı geçiş tercihini koru
             if (saved.sartliActive === undefined && localStorage.getItem('sartli_active') !== null) {
                 merged.sartliActive = localStorage.getItem('sartli_active') === 'true';
             }
 
-            merged.normalVizeWeight = clamp(Number(merged.normalVizeWeight) || 0, 0, 100);
-            if (isNaN(Number(saved.normalVizeWeight))) merged.normalVizeWeight = DEFAULT_PREFS.normalVizeWeight;
+            merged.normalVizeWeight = isNaN(Number(saved.normalVizeWeight))
+                ? DEFAULT_PREFS.normalVizeWeight
+                : clamp(Number(saved.normalVizeWeight), 0, 100);
 
-            merged.projeVizeWeight = isNaN(Number(saved.projeVizeWeight)) ? DEFAULT_PREFS.projeVizeWeight : clamp(Number(saved.projeVizeWeight), 0, 100);
-            merged.projeProjeWeight = isNaN(Number(saved.projeProjeWeight)) ? DEFAULT_PREFS.projeProjeWeight : clamp(Number(saved.projeProjeWeight), 0, 100 - merged.projeVizeWeight);
+            merged.projeVizeWeight = isNaN(Number(saved.projeVizeWeight))
+                ? DEFAULT_PREFS.projeVizeWeight
+                : clamp(Number(saved.projeVizeWeight), 0, 100);
+
+            merged.projeProjeWeight = isNaN(Number(saved.projeProjeWeight))
+                ? DEFAULT_PREFS.projeProjeWeight
+                : clamp(Number(saved.projeProjeWeight), 0, 100 - merged.projeVizeWeight);
 
             merged.gecmeCustom = clamp(Number(merged.gecmeCustom) || 55, 1, 100);
             merged.hedefCustom = clamp(Number(merged.hedefCustom) || 55, 1, 100);
@@ -75,10 +80,8 @@
             localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
             localStorage.setItem('sartli_active', String(Boolean(prefs.sartliActive)));
         } catch (err) {
-            // Storage unavailable
+            // Storage kullanılamıyor
         }
-        updateSmartStatusBars();
-        updatePresetChipsUI();
     }
 
     function getActiveGecmeNotu() {
@@ -113,19 +116,32 @@
         });
     }
 
+    function setVal(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.value = String(value);
+    }
+
+    function setText(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    }
+
+    function toggleCustomWrapper(id, visible) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('visible', visible);
+    }
+
     /* =========================================================
        AKILLI SENKRONİZASYON VE ARAYÜZ GÜNCELLEME
        ========================================================= */
 
     function syncAllControlsFromPrefs() {
-        // Normal ağırlıklar
         const normalFinal = 100 - prefs.normalVizeWeight;
         setVal('vize-agirlik-tp', prefs.normalVizeWeight);
         setVal('final-agirlik-tp', normalFinal);
         setVal('vize-agirlik-fi', prefs.normalVizeWeight);
         setVal('final-agirlik-fi', normalFinal);
 
-        // Proje ağırlıklar
         const projeFinal = Math.max(0, 100 - (prefs.projeVizeWeight + prefs.projeProjeWeight));
         setVal('vize-agirlik-proje-tp', prefs.projeVizeWeight);
         setVal('proje-agirlik-proje-tp', prefs.projeProjeWeight);
@@ -134,7 +150,6 @@
         setVal('proje-agirlik-proje-fi', prefs.projeProjeWeight);
         setVal('final-agirlik-proje-fi', projeFinal);
 
-        // Geçme notu kontrolleri
         setVal('gecme-notu-tp', prefs.gecmeSelect);
         setVal('gecme-notu-proje-tp', prefs.gecmeSelect);
         setVal('gecme-custom-tp', prefs.gecmeCustom);
@@ -143,7 +158,6 @@
         toggleCustomWrapper('gecme-custom-wrap-tp', prefs.gecmeSelect === 'custom');
         toggleCustomWrapper('gecme-custom-wrap-proje-tp', prefs.gecmeSelect === 'custom');
 
-        // Hedef ortalama kontrolleri
         setVal('hedefPuan-fi', prefs.hedefSelect);
         setVal('hedefPuan-proje-fi', prefs.hedefSelect);
         setVal('hedef-custom-fi', prefs.hedefCustom);
@@ -152,7 +166,6 @@
         toggleCustomWrapper('hedef-custom-wrap-fi', prefs.hedefSelect === 'custom');
         toggleCustomWrapper('hedef-custom-wrap-proje-fi', prefs.hedefSelect === 'custom');
 
-        // Şartlı geçiş senkronizasyonu
         document.querySelectorAll('.sartli-toggle').forEach(function (t) {
             t.checked = Boolean(prefs.sartliActive);
         });
@@ -165,53 +178,6 @@
 
         updateGecmeNotu('tp');
         updateGecmeNotu('proje-tp');
-        updateSmartStatusBars();
-        updatePresetChipsUI();
-    }
-
-    function setVal(id, value) {
-        const el = document.getElementById(id);
-        if (el) el.value = String(value);
-    }
-
-    function toggleCustomWrapper(id, visible) {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('visible', visible);
-    }
-
-    function updateSmartStatusBars() {
-        const normalFinal = 100 - prefs.normalVizeWeight;
-        const projeFinal = Math.max(0, 100 - (prefs.projeVizeWeight + prefs.projeProjeWeight));
-        const gecme = getActiveGecmeNotu();
-        const hedef = getActiveHedefNotu();
-
-        const normText = 'Vize %' + prefs.normalVizeWeight + ' · Final %' + normalFinal + ' · Geçme ' + gecme;
-        const normFiText = 'Vize %' + prefs.normalVizeWeight + ' · Final %' + normalFinal + ' · Hedef ' + hedef;
-        const projText = 'Vize %' + prefs.projeVizeWeight + ' · Proje %' + prefs.projeProjeWeight + ' · Final %' + projeFinal + ' · Geçme ' + gecme;
-        const projFiText = 'Vize %' + prefs.projeVizeWeight + ' · Proje %' + prefs.projeProjeWeight + ' · Final %' + projeFinal + ' · Hedef ' + hedef;
-
-        setText('smart-summary-normal-tp', normText);
-        setText('smart-summary-normal-fi', normFiText);
-        setText('smart-summary-proje-tp', projText);
-        setText('smart-summary-proje-fi', projFiText);
-    }
-
-    function setText(id, text) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = text;
-    }
-
-    function updatePresetChipsUI() {
-        document.querySelectorAll('[data-preset-normal]').forEach(function (btn) {
-            const vize = Number(btn.getAttribute('data-preset-normal'));
-            btn.classList.toggle('active', vize === prefs.normalVizeWeight);
-        });
-
-        document.querySelectorAll('[data-preset-proje-vize]').forEach(function (btn) {
-            const vize = Number(btn.getAttribute('data-preset-proje-vize'));
-            const proje = Number(btn.getAttribute('data-preset-proje-proje'));
-            btn.classList.toggle('active', vize === prefs.projeVizeWeight && proje === prefs.projeProjeWeight);
-        });
     }
 
     /* =========================================================
@@ -242,7 +208,9 @@
             savePrefs();
         }
 
-        const targetSub = type === 'normal' ? (prefs.activeSubTabNormal || 'normal-tp') : (prefs.activeSubTabProje || 'proje-tp');
+        const targetSub = type === 'normal'
+            ? (prefs.activeSubTabNormal || 'normal-tp')
+            : (prefs.activeSubTabProje || 'proje-tp');
         showSubCalculator(targetSub, true);
     }
 
@@ -311,13 +279,6 @@
         savePrefs();
     }
 
-    function applyNormalPreset(vizePct) {
-        prefs.normalVizeWeight = clamp(Number(vizePct), 0, 100);
-        syncAllControlsFromPrefs();
-        savePrefs();
-        hideAllResultBoxes();
-    }
-
     function updateProjeWeights(suffix, finalize) {
         const otherSuffix = suffix === 'proje-tp' ? 'proje-fi' : 'proje-tp';
         const vizeInput = document.getElementById('vize-agirlik-' + suffix);
@@ -359,14 +320,6 @@
         savePrefs();
     }
 
-    function applyProjePreset(vizePct, projePct) {
-        prefs.projeVizeWeight = clamp(Number(vizePct), 0, 100);
-        prefs.projeProjeWeight = clamp(Number(projePct), 0, 100 - prefs.projeVizeWeight);
-        syncAllControlsFromPrefs();
-        savePrefs();
-        hideAllResultBoxes();
-    }
-
     /* =========================================================
        GEÇME NOTU VE HEDEF ORTALAMA (ÖZEL DEĞER HAFIZASI & SENKRONİZASYON)
        ========================================================= */
@@ -377,7 +330,6 @@
         if (!selectEl) return;
 
         prefs.gecmeSelect = selectEl.value;
-        // Geçme notu değiştiğinde Hedef Ortalama da akıllı olarak aynı değere geçer
         prefs.hedefSelect = selectEl.value;
         if (selectEl.value === 'custom') {
             prefs.hedefCustom = prefs.gecmeCustom;
@@ -490,23 +442,6 @@
             if (inp !== event.target) inp.value = String(val);
         });
         savePrefs();
-    }
-
-    function resetPreferences() {
-        const currentMain = prefs.activeMainTab;
-        const currentSubNormal = prefs.activeSubTabNormal;
-        const currentSubProje = prefs.activeSubTabProje;
-
-        prefs = Object.assign({}, DEFAULT_PREFS, {
-            activeMainTab: currentMain,
-            activeSubTabNormal: currentSubNormal,
-            activeSubTabProje: currentSubProje
-        });
-
-        syncAllControlsFromPrefs();
-        savePrefs();
-        hideAllResultBoxes();
-        NotmatikCommon.showToast('Varsayılan ayarlar geri yüklendi (Vize %30 · Final %70).', 'success');
     }
 
     /* =========================================================
@@ -815,7 +750,7 @@
     }
 
     /* =========================================================
-       HEDEF DEFTERİNE KAYIT MODALI (DİREKT KAYIT + PANO DESTEĞİ)
+       HEDEF DEFTERİNE KAYIT MODALI
        ========================================================= */
 
     function buildGoalDataString(btn) {
@@ -952,7 +887,6 @@
        ========================================================= */
 
     document.addEventListener('DOMContentLoaded', function () {
-        // URL parametresi ile sekme açılışı (?tab=normal veya ?tab=proje)
         const params = new URLSearchParams(window.location.search);
         const urlTab = params.get('tab');
         if (urlTab === 'normal' || urlTab === 'proje') {
@@ -963,7 +897,6 @@
         showMainCalculator(prefs.activeMainTab || 'normal', true);
         hideAllResultBoxes();
 
-        // Enter ile aktif hesaplama formunu gönderme
         document.querySelectorAll('.calculator-content input').forEach(function (input) {
             input.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
@@ -974,7 +907,6 @@
             });
         });
 
-        // Hedef kaydet modalı olayları
         const saveModal = document.getElementById('save-goal-modal');
         if (saveModal) {
             saveModal.addEventListener('click', function (e) {
@@ -1004,13 +936,10 @@
         checkAndShowModalWithTimer();
     });
 
-    // Global fonksiyon bağlamaları
     window.showMainCalculator = showMainCalculator;
     window.showSubCalculator = showSubCalculator;
     window.updateFinalWeight = updateFinalWeight;
-    window.applyNormalPreset = applyNormalPreset;
     window.updateProjeWeights = updateProjeWeights;
-    window.applyProjePreset = applyProjePreset;
     window.handleGecmeSelectChange = handleGecmeSelectChange;
     window.handleGecmeCustomInput = handleGecmeCustomInput;
     window.handleHedefSelectChange = handleHedefSelectChange;
@@ -1018,7 +947,6 @@
     window.updateGecmeNotu = updateGecmeNotu;
     window.toggleSartliUI = toggleSartliUI;
     window.handleSartliSinirInput = handleSartliSinirInput;
-    window.resetPreferences = resetPreferences;
     window.hesaplaToplamPuan = hesaplaToplamPuan;
     window.hesaplaFinalIhtiyaci = hesaplaFinalIhtiyaci;
     window.hesaplaProjeToplamPuan = hesaplaProjeToplamPuan;

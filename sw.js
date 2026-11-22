@@ -2,13 +2,14 @@
    NOTMATİK - Service Worker (Çevrimdışı PWA Desteği)
    ========================================================= */
 
-const CACHE_NAME = 'notmatik-v3.0.0';
+const CACHE_NAME = 'notmatik-v3.1.0';
 const APP_SHELL = [
     './',
     './index.html',
     './not-defteri.html',
     './offline.html',
     './manifest.webmanifest',
+    './opensearch.xml',
     './favicon.ico',
     './assets/css/main.css',
     './assets/css/calculator.css',
